@@ -32,6 +32,23 @@ This separation is intentional:
 
 All three layers must be correct for provider-backed chat operations.
 
+## Auth Mode for IM Channels {#auth-mode-for-im-channels}
+
+When a provider is used from IM channels, remember the runtime path:
+
+```text
+IM tool -> IM channel -> Agent -> Provider
+```
+
+The IM channel does not carry the user's browser cookie or provider SSO token.
+If the provider must call the upstream system as the individual user, configure
+the provider instance with `auth_type: "user_token"` and ask users to save a
+Provider Token for that provider type and instance name.
+
+If the provider uses a shared administrator-managed credential, user token
+setup is not required. This applies to provider instances that use
+`provider_token`, username/password `credential`, or `app_credentials`.
+
 ## Instance Naming {#instance-naming}
 
 Use stable, environment-oriented instance names such as `default`, `prod`,

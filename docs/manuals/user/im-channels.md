@@ -23,6 +23,31 @@ be treated as a product default unless the deployment defines custom role policy
 The connection name is for your own administration. Use a name that identifies
 the upstream bot or group, such as `team-oncall-dingtalk` or `personal-feishu`.
 
+## Runtime Path {#runtime-path}
+
+An IM conversation reaches provider-backed capabilities through this path:
+
+```text
+IM tool -> IM channel -> Agent -> Provider
+```
+
+The IM tool, such as a DingTalk, Feishu/Lark, or WeCom bot, delivers the
+message to the AtlasClaw IM channel. The channel resolves the user and session,
+then sends the conversation turn to the Agent. When the Agent needs external
+system data or operations, it calls a Provider skill.
+
+This is different from opening AtlasClaw inside a browser or embedded host
+system. IM messages do not carry the user's browser cookie or SSO token for the
+target provider system. Because of that, a provider that must call the upstream
+system as the real user should be configured with `auth_type: "user_token"`,
+and each user must save their own Provider Token.
+
+You do not need a personal Provider Token when the provider instance is designed
+to use a shared administrator-managed credential, such as `provider_token`,
+`credential` with username/password, or `app_credentials`. In those modes, the
+provider call runs under the configured shared or robot identity, subject to the
+target system's own permissions.
+
 ## DingTalk {#dingtalk}
 
 | Mode | Required fields | Notes |

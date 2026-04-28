@@ -14,8 +14,15 @@ per-user authentication.
 Configure a provider token when:
 
 - the provider instance uses user token authentication;
+- you use a provider from an IM channel and that provider must access the
+  upstream system as your own user;
 - the agent says your user token is missing, invalid, rejected, or expired;
 - your administrator tells you a provider requires user-owned credentials.
+
+IM channel conversations go through `IM tool -> IM channel -> Agent ->
+Provider`. The IM message does not carry your browser cookie or SSO token for
+the target provider system, so per-user provider access from IM requires a
+saved Provider Token.
 
 ## Provider-Specific Instructions {#provider-specific-instructions}
 

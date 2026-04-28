@@ -13,8 +13,11 @@ Provider Token 是用户自有凭证，用于需要按用户认证的 Provider �
 当出现以下情况时需要配置：
 
 - Provider 实例使用 user token 认证；
+- 你从 IM 渠道使用 Provider，并且该 Provider 需要以你的个人身份访问上游系统；
 - Agent 提示你的 user token 缺失、无效、被拒绝或已过期；
 - 管理员告知某个 Provider 需要用户自有凭证。
+
+IM 渠道对话的调用路径是 `IM 工具 -> IM 渠道 -> Agent -> Provider`。IM 消息不会携带你在目标 Provider 系统中的浏览器 Cookie 或 SSO Token，因此 IM 场景下的按用户 Provider 访问需要保存 Provider Token。
 
 ## Provider 专属说明 {#provider-specific-instructions}
 

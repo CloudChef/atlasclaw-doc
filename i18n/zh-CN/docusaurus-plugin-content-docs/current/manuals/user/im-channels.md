@@ -20,6 +20,20 @@ sidebar_position: 5
 
 连接名称只用于你自己管理。建议使用能识别上游机器人或群组的名称，例如 `team-oncall-dingtalk` 或 `personal-feishu`。
 
+## 运行时调用路径 {#runtime-path}
+
+IM 对话通过下面的路径触达 Provider 能力：
+
+```text
+IM 工具 -> IM 渠道 -> Agent -> Provider
+```
+
+DingTalk、Feishu/Lark 或 WeCom 机器人等 IM 工具先把消息送到 AtlasClaw IM 渠道。渠道解析用户和会话后，把这一轮对话交给 Agent。当 Agent 需要查询或操作外部系统时，再调用 Provider Skill。
+
+这和用户在浏览器或宿主系统内嵌页面中打开 AtlasClaw 不同。IM 消息不会携带用户在目标 Provider 系统中的浏览器 Cookie 或 SSO Token。因此，如果 Provider 必须以真实用户身份调用上游系统，管理员应把 Provider 实例配置为 `auth_type: "user_token"`，并要求每个用户保存自己的 Provider Token。
+
+如果 Provider 实例使用管理员统一配置的共享凭证，则用户不需要配置个人 Provider Token。例如 `provider_token`、带 username/password 的 `credential`，或 `app_credentials`。这些模式下，Provider 调用会使用配置好的共享身份或机器人身份，并继续受目标系统自身权限控制。
+
 ## DingTalk {#dingtalk}
 
 | 模式 | 必填字段 | 说明 |

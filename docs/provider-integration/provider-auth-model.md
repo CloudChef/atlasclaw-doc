@@ -27,6 +27,26 @@ Provider skills that call external APIs must run with provider-native
 credentials. Workspace admin status must not bypass the target system's own
 authorization.
 
+## IM Channel Requests {#im-channel-requests}
+
+IM channel requests follow this runtime path:
+
+```text
+IM tool -> IM channel -> Agent -> Provider
+```
+
+The IM tool and channel can identify the AtlasClaw user and conversation, but
+they do not provide the user's browser cookie or SSO token for the target
+provider system. Request-scoped `cookie` and `sso` provider modes are therefore
+not suitable when an IM conversation must call the provider as the real
+upstream user.
+
+Use `auth_type: "user_token"` for provider instances that need per-user
+upstream authorization from IM conversations. Each user then stores their own
+Provider Token. If the provider is intentionally configured with a shared
+`provider_token`, administrator-owned `credential` username/password, or
+`app_credentials`, users do not need personal Provider Tokens for IM use.
+
 ## Auth Chains {#auth-chains}
 
 Some providers support an ordered `auth_type` chain. The provider selects the

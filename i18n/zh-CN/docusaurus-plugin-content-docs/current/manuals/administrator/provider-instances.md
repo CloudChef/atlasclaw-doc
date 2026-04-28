@@ -18,6 +18,18 @@ Provider 实例配置权限和运行时访问权限是两件事。角色可以�
 
 这三层需要同时正确：Provider 配置权限允许管理员创建或编辑实例记录；Provider 运行时权限允许用户通过 Agent 调用某个 Provider 实例；Provider 原生凭证决定上游系统最终允许哪些操作。
 
+## 面向 IM 渠道的认证模式 {#auth-mode-for-im-channels}
+
+Provider 被 IM 渠道使用时，需要记住运行时路径：
+
+```text
+IM 工具 -> IM 渠道 -> Agent -> Provider
+```
+
+IM 渠道不会携带用户在浏览器中的 Cookie，也不会携带目标 Provider 系统的 SSO Token。如果 Provider 必须以单个用户身份调用上游系统，应把 Provider 实例配置为 `auth_type: "user_token"`，并要求用户为对应 Provider 类型和实例名保存 Provider Token。
+
+如果 Provider 使用管理员统一管理的共享凭证，则不需要用户配置个人 Token。这适用于使用 `provider_token`、username/password `credential` 或 `app_credentials` 的 Provider 实例。
+
 ## 实例命名 {#instance-naming}
 
 建议使用稳定的环境名称，如 `default`、`prod`、`staging` 或业务单元名。不要把密钥、个人姓名或临时事件写进实例名。Provider 权限和用户凭证会绑定到 Provider 类型加实例名，因此重命名实例应视为访问迁移。

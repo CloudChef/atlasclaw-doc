@@ -20,6 +20,18 @@ AtlasClaw 负责识别用户。Provider 负责把该身份转换为目标系统�
 
 调用外部 API 的 Provider 技能必须使用 Provider 原生凭证。Workspace 管理员身份不能绕过目标系统自己的权限控制。
 
+## IM 渠道请求 {#im-channel-requests}
+
+IM 渠道请求遵循下面的运行时路径：
+
+```text
+IM 工具 -> IM 渠道 -> Agent -> Provider
+```
+
+IM 工具和渠道可以识别 AtlasClaw 用户和会话，但不会提供用户在目标 Provider 系统中的浏览器 Cookie 或 SSO Token。因此，当 IM 对话需要以真实上游用户身份调用 Provider 时，请求级 `cookie` 和 `sso` Provider 模式并不适用。
+
+如果 Provider 实例需要在 IM 对话中按用户权限访问上游系统，应使用 `auth_type: "user_token"`。每个用户随后在 Provider Tokens 中保存自己的 Token。如果 Provider 明确使用统一的 `provider_token`、管理员拥有的 username/password `credential`，或 `app_credentials`，则 IM 使用时用户不需要配置个人 Provider Token。
+
 ## 认证链 {#auth-chains}
 
 部分 Provider 支持有序 `auth_type` 链。Provider 会根据可用字段和请求上下文选择第一个可用模式。
