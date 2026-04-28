@@ -1,0 +1,26 @@
+{
+  "item.label.Install": {
+    "message": "安装",
+    "description": "Navbar item with label Install"
+  },
+  "item.label.Admin": {
+    "message": "管理员",
+    "description": "Navbar item with label Admin"
+  },
+  "item.label.User": {
+    "message": "用户",
+    "description": "Navbar item with label User"
+  },
+  "item.label.Core": {
+    "message": "Core",
+    "description": "Navbar item with label Core"
+  },
+  "item.label.Provider Integration": {
+    "message": "Provider 集成",
+    "description": "Navbar item with label Provider Integration"
+  },
+  "item.label.Reference": {
+    "message": "参考",
+    "description": "Navbar item with label Reference"
+  }
+}

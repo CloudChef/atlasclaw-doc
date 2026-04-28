@@ -1,0 +1,51 @@
+:root {
+  --ifm-color-primary: #0f766e;
+  --ifm-color-primary-dark: #0b5f59;
+  --ifm-color-primary-darker: #084f4a;
+  --ifm-color-primary-darkest: #073d3a;
+  --ifm-color-primary-light: #12877e;
+  --ifm-color-primary-lighter: #18998f;
+  --ifm-color-primary-lightest: #22b8ad;
+  --ifm-font-family-base: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --ifm-heading-font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --ifm-code-font-size: 92%;
+  --ifm-navbar-height: 60px;
+}
+
+html[data-theme='dark'] {
+  --ifm-color-primary: #2dd4bf;
+  --ifm-background-color: #101418;
+  --ifm-background-surface-color: #151b20;
+}
+
+.navbar {
+  border-bottom: 1px solid var(--ifm-toc-border-color);
+}
+
+.theme-doc-markdown h1 {
+  font-size: 2.25rem;
+  letter-spacing: 0;
+}
+
+.theme-doc-markdown h2 {
+  border-top: 1px solid var(--ifm-toc-border-color);
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+}
+
+.theme-doc-markdown table {
+  display: table;
+  width: 100%;
+}
+
+.theme-doc-sidebar-container {
+  border-right: 1px solid var(--ifm-toc-border-color);
+}
+
+.menu__link {
+  border-radius: 6px;
+}
+
+.footer {
+  border-top: 1px solid var(--ifm-toc-border-color);
+}
