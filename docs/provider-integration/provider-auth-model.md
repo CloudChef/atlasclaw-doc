@@ -14,18 +14,56 @@ identity into credentials the target system accepts.
 - Instance-scoped credentials are configured by administrators.
 - User-scoped credentials are configured by each user.
 - Request-scoped credentials can come from cookies or upstream headers.
+- Robot profile credentials are administrator-owned credentials selected only
+  for an authorized webhook skill dispatch.
 
 Instance credentials are appropriate for shared service accounts or deployment
 integration tokens. User credentials are appropriate when every action must be
 attributable to the upstream user. Request-scoped credentials are appropriate
 when AtlasClaw is embedded behind a system that already authenticated the user
-and forwards a valid upstream token or cookie.
+and forwards a valid upstream token or cookie. Robot profile credentials are
+appropriate when an external webhook triggers backend automation that must be
+auditable as a provider-native robot or service account.
 
 ## Runtime Rule {#runtime-rule}
 
 Provider skills that call external APIs must run with provider-native
 credentials. Workspace admin status must not bypass the target system's own
 authorization.
+
+## Webhook Robot Profiles {#webhook-robot-profiles}
+
+Robot profiles are configured under a provider instance and are selected by
+webhook payload fields. They do not change the provider instance's normal
+interactive auth mode.
+
+```json
+{
+  "service_providers": {
+    "example_provider": {
+      "default": {
+        "base_url": "${PROVIDER_URL}",
+        "auth_type": "user_token",
+        "robot_auth": {
+          "backend_bot": {
+            "auth_type": "provider_token",
+            "provider_token": "${PROVIDER_ROBOT_TOKEN}",
+            "allowed_skills": ["example_provider:backend-agent"]
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+At runtime, AtlasClaw builds a scoped provider config for the selected instance
+and selected robot profile. The provider script receives that config through
+the tool process environment. Robot credentials must not be copied into prompts,
+trace text, user settings, or webhook payloads.
+
+For the full setup pattern, see
+[Webhook Robot Execution](/provider-integration/webhook-robot-execution).
 
 ## IM Channel Requests {#im-channel-requests}
 

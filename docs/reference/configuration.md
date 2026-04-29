@@ -162,6 +162,57 @@ The first key is the provider type. The second key is the instance name. The
 inner object is the provider instance template. Provider-specific fields are
 declared by `provider.schema.json`.
 
+### Webhook and Robot Profiles {#webhook-and-robot-profiles}
+
+Webhook dispatch uses provider-qualified Markdown skills. A webhook system
+must define a secret environment variable and an allowlist:
+
+```json
+{
+  "webhook": {
+    "enabled": true,
+    "header_name": "X-AtlasClaw-SK",
+    "systems": [
+      {
+        "system_id": "external-review",
+        "enabled": true,
+        "sk_env": "ATLASCLAW_WEBHOOK_SK_EXTERNAL_REVIEW",
+        "default_agent_id": "main",
+        "allowed_skills": ["example_provider:backend-agent"]
+      }
+    ]
+  }
+}
+```
+
+For webhook-triggered backend skills that should call a provider as a robot
+identity, configure a robot profile under the provider instance:
+
+```json
+{
+  "service_providers": {
+    "example_provider": {
+      "default": {
+        "base_url": "${PROVIDER_URL}",
+        "auth_type": "user_token",
+        "robot_auth": {
+          "backend_bot": {
+            "auth_type": "provider_token",
+            "provider_token": "${PROVIDER_ROBOT_TOKEN}",
+            "allowed_skills": ["example_provider:backend-agent"]
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+The webhook payload selects the robot profile with
+`args.provider_instance` and `args.robot_profile`. See
+[Webhook Robot Execution](/provider-integration/webhook-robot-execution) for
+the runtime flow and security rules.
+
 ## Environment Expansion {#environment-expansion}
 
 String values in configuration may reference environment variables with

@@ -39,6 +39,7 @@ const sidebars = {
     'provider-integration/overview',
     'provider-integration/provider-loading',
     'provider-integration/provider-auth-model',
+    'provider-integration/webhook-robot-execution',
     'provider-integration/embedded-mode',
     {
       type: 'category',

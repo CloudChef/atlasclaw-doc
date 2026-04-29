@@ -43,6 +43,58 @@ Use this when a shared SmartCMP token is acceptable:
 }
 ```
 
+## Robot Profiles for Webhook Skills {#robot-profiles-for-webhook-skills}
+
+Use a SmartCMP robot profile when an external webhook triggers backend skills
+that must execute as a SmartCMP robot or administrator account. The provider
+instance can keep its normal interactive auth mode, while `robot_auth` defines
+the credential used only for authorized webhook robot execution.
+
+```json
+{
+  "service_providers": {
+    "smartcmp": {
+      "cmp": {
+        "base_url": "${CMP_URL}",
+        "auth_type": "user_token",
+        "robot_auth": {
+          "preapproval_bot": {
+            "auth_type": "provider_token",
+            "provider_token": "${CMP_ROBOT_APPROVER_TOKEN}",
+            "allowed_skills": [
+              "smartcmp:preapproval-agent",
+              "smartcmp:request-decomposition-agent"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+Recommended SmartCMP robot credentials use `cmp_tk_*` tokens. SmartCMP scripts
+send those tokens as `Authorization: Bearer <token>`. SmartCMP audit trails
+should show the configured robot/admin account for approval actions and for
+webhook request submissions that do not forward SmartCMP user cookies.
+
+The webhook payload must include the selected provider instance and robot
+profile:
+
+```json
+{
+  "skill": "smartcmp:preapproval-agent",
+  "args": {
+    "provider_instance": "cmp",
+    "robot_profile": "preapproval_bot",
+    "request_id": "REQ-10001"
+  }
+}
+```
+
+See [Webhook Robot Execution](/provider-integration/webhook-robot-execution)
+for the generic webhook configuration and security rules.
+
 ## Cookie or Credential Mode {#cookie-or-credential-mode}
 
 Cookie mode uses a SmartCMP session cookie. Credential mode logs in with
