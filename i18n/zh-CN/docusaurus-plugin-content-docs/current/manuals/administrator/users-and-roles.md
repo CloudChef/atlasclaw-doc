@@ -13,7 +13,7 @@ AtlasClaw 使用 workspace 角色控制管理权限。Provider 运行时操作�
 | 角色 | 标识符 | 用途 |
 | --- | --- | --- |
 | Administrator | `admin` | 管理 workspace 配置和访问控制。 |
-| Standard User | `user` | 默认协作角色，可使用已启用技能并管理自己的渠道连接。 |
+| Standard User | `user` | 默认协作角色，拥有已注册 Skill、Provider 实例和 Channel 类型的运行时访问权。 |
 | Viewer | `viewer` | 审计和监督场景的只读角色。 |
 
 ## 用户管理 {#user-management}
@@ -30,7 +30,7 @@ AtlasClaw 使用 workspace 角色控制管理权限。Provider 运行时操作�
 
 ## 内置角色行为 {#built-in-role-behavior}
 
-内置 `admin` 和 `user` 角色由系统管理。它们的元数据只读，大多数权限模块会被系统恢复到规范默认值。Skill 和 Provider 的运行时访问模块仍可管理，以便管理员控制用户实际能执行哪些能力。
+内置 `admin` 和 `user` 角色由系统管理。它们的元数据只读。Skill、Provider 和 Channel 的运行时访问模块会从已注册目录初始化，以便管理员控制用户实际能执行哪些能力。
 
 不要通过修改内置 Standard User 来表达复杂策略。需要自定义管理策略时，应创建新的自定义角色。
 
@@ -38,10 +38,21 @@ AtlasClaw 使用 workspace 角色控制管理权限。Provider 运行时操作�
 
 1. 选择稳定的 `identifier`，创建后不要再修改。
 2. 只授予该角色职责所需的模块权限。
-3. 如果该角色需要执行 Provider Skill，添加 Provider 运行时访问权。
-4. 添加该角色可见和可用的 Skill 权限。
-5. 给测试用户分配角色，验证 UI 和 Chat 运行时表现。
+3. 添加该角色可用的 Skill 权限。
+4. 如果该角色需要执行 Provider Skill，添加 Provider 运行时访问权。
+5. 添加该角色可以管理的 IM Channel 类型。
+6. 给测试用户分配角色，验证 UI 和 Chat 运行时表现。
+
+## 权限示例 {#permission-examples}
+
+| 需求 | 可考虑的权限 |
+| --- | --- |
+| 管理用户但不管理模型 | `users.view`、`users.create`、`users.edit`、`users.assign_roles` |
+| 运维 Provider 实例 | `provider_configs.view`、`provider_configs.create`、`provider_configs.edit` |
+| 授予 Provider 运行时访问权 | `providers.manage_permissions` 加 Provider permission 条目 |
+| 管理模型端点 | `model_configs.view`、`model_configs.create`、`model_configs.edit`、`model_configs.delete` |
+| 允许个人 Channel 设置 | 对允许的 Channel 类型添加 `channels.channel_permissions` 条目 |
 
 ## 访问问题排查 {#troubleshooting-access}
 
-用户能看到 Skill 但无法完成 Provider 请求时，检查三层：角色启用了该 Skill、角色能访问目标 Provider 实例、用户已配置 Provider 需要的有效凭证。
+用户能看到 Skill 但无法完成 Provider 请求时，检查四层：角色启用了该 Skill、角色能访问目标 Provider 实例、IM 请求使用的 Channel 类型对角色开放、用户已配置 Provider 需要的有效凭证。

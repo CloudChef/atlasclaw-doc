@@ -14,13 +14,13 @@ sidebar_position: 7
 
 ## 管理页面不可见 {#admin-page-is-hidden}
 
-管理导航由权限控制。确认当前用户拥有相应模块权限，例如 `users.view`、`roles.view`、`model_configs.view` 或 `channels.view`。
+管理导航由权限控制。确认当前用户拥有相应模块权限，例如 `users.view`、`roles.view`、`model_configs.view` 或 `channels.module_permissions.manage_permissions`。
 
 ## Provider 技能不可用 {#provider-skill-is-not-available}
 
-检查 `providers_root`、Provider 包结构、Provider schema、技能元数据、角色技能权限和 Provider 实例运行时权限。
+检查 `providers_root`、Provider 包结构、Provider schema、技能元数据、角色技能权限、Provider 实例运行时权限，以及 IM 请求对应的 Channel 访问权。
 
-按层排查：Provider 包已被发现；Provider 实例存在并启用；角色有该 Provider 实例访问权；角色启用了该 Skill；用户已配置必要的用户级凭证。
+按层排查：Provider 包已被发现；Provider 实例存在并启用；角色有该 Provider 实例访问权；角色启用了该 Skill；如来自 IM，角色有该 Channel 类型访问权；用户已配置必要的用户级凭证。
 
 ## 渠道连接无法启动 {#channel-connection-does-not-start}
 

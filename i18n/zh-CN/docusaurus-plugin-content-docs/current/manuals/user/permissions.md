@@ -12,9 +12,8 @@ sidebar_position: 6
 
 默认情况下，Standard User 可以：
 
-- 查看已启用技能；
 - 使用角色和 Provider 访问允许的技能与 Provider 能力；
-- 查看、创建、编辑和删除自己的渠道连接；
+- 管理角色允许的 Channel 类型下自己的连接；
 - 管理自己的账号资料和 Provider Token。
 
 ## 默认不包含 {#not-included-by-default}
@@ -25,18 +24,20 @@ sidebar_position: 6
 - 角色；
 - 模型配置；
 - Provider 实例配置；
+- Skill 管理或权限页面；
 - 权限模型。
 
 如果需要管理页面或 Provider 实例访问权，请联系管理员。
 
 ## 运行时访问如何生效 {#how-runtime-access-works}
 
-一次成功的 Provider 请求通常需要四个条件：
+一次成功的 Provider 请求通常需要这些条件：
 
 1. 该 Skill 对你的角色启用。
 2. 你的角色可以访问目标 Provider 实例。
 3. Provider 实例启用且配置正确。
-4. 如果 Provider 使用用户凭证，你的上游凭证有效。
+4. 如果请求来自 IM Channel，该 Channel 类型对你的角色开放。
+5. 如果 Provider 使用用户凭证，你的上游凭证有效。
 
 任何一层缺失，Agent 都应报告阻塞原因，而不是猜测执行。
 

@@ -14,7 +14,7 @@ actions still execute under the authenticated user's real upstream identity.
 | Role | Identifier | Purpose |
 | --- | --- | --- |
 | Administrator | `admin` | Full administrative access to workspace configuration and access control. |
-| Standard User | `user` | Default collaborator role with access to enabled workspace skills and own channel connections. |
+| Standard User | `user` | Default collaborator role with runtime access to registered skills, provider instances, and channel types. |
 | Viewer | `viewer` | Read-only role for audit and oversight workflows. |
 
 ## User Management {#user-management}
@@ -53,10 +53,9 @@ privileges.
 ## Built-In Role Behavior {#built-in-role-behavior}
 
 The built-in `admin` and `user` roles are system-managed. Their metadata is
-read-only, and most permission modules are restored to canonical defaults when
-the application ensures built-in roles. Runtime access modules for skills and
-providers can still be managed so administrators can decide which skills and
-provider instances users can actually run.
+read-only. Runtime access modules for skills, providers, and channels are
+initialized from the registered catalogs so administrators can decide which
+skills, provider instances, and channel types users can actually run.
 
 Do not model a custom access policy by trying to turn the built-in Standard
 User role into an administrator or a locked-down viewer. Create a custom role
@@ -70,9 +69,10 @@ managers.
 
 1. Choose a stable `identifier`. Identifiers cannot be changed after creation.
 2. Grant only the module permissions needed for the role.
-3. Add provider runtime access if the role should execute provider skills.
-4. Add skill permissions for the skills the role should see and use.
-5. Assign the role to a test user and verify the UI and chat runtime behavior.
+3. Add skill permissions for the skills the role should use.
+4. Add provider runtime access if the role should execute provider-backed skills.
+5. Add channel access for every IM channel type the role should manage.
+6. Assign the role to a test user and verify the UI and chat runtime behavior.
 
 ## Permission Examples {#permission-examples}
 
@@ -82,14 +82,15 @@ managers.
 | Operate provider instances | `provider_configs.view`, `provider_configs.create`, `provider_configs.edit` |
 | Grant provider runtime access | `providers.manage_permissions` plus provider permission entries |
 | Manage model endpoints | `model_configs.view`, `model_configs.create`, `model_configs.edit`, `model_configs.delete` |
-| Allow personal channel setup | `channels.view`, `channels.create`, `channels.edit`, `channels.delete` |
+| Allow personal channel setup | `channels.channel_permissions` entries for the allowed channel types |
 
 ## Troubleshooting Access {#troubleshooting-access}
 
 When a user can see a skill but cannot complete a provider-backed request,
-check three layers:
+check these layers:
 
 1. The role has the skill enabled.
 2. The role has access to the target provider instance.
-3. The user has valid provider-native credentials when the provider requires
+3. The role has access to the IM channel type when the request comes from IM.
+4. The user has valid provider-native credentials when the provider requires
    per-user authentication.

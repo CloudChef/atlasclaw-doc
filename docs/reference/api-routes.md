@@ -58,6 +58,11 @@ sidebar_position: 2
 - `/api/channels/{channel_type}/connections/{connection_id}/enable`
 - `/api/channels/{channel_type}/connections/{connection_id}/disable`
 
+The normal channel catalog returns only channel types allowed by the current
+user's roles. `include_all=true` returns the full registered catalog only for
+users who can manage role permissions or channel permissions. Channel lifecycle
+routes require access to the requested `channel_type`.
+
 ## Provider Discovery APIs {#provider-discovery-apis}
 
 - `/api/providers`

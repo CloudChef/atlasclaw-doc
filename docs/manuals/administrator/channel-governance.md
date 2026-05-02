@@ -11,10 +11,15 @@ channel handlers include DingTalk, Feishu/Lark, WeCom, REST, WebSocket, and SSE.
 
 ## Permission Boundary {#permission-boundary}
 
-The default Standard User role can view, create, edit, and delete its own
-channel connections. The built-in `user` role is system-managed, so deployments
-that need a different policy should use custom roles or a deliberate runtime
-change instead of treating the built-in role as freely editable.
+Channel access is granted by channel type. A role can manage only the channel
+types that are explicitly allowed in its `channels.channel_permissions` entries.
+The default `admin` and `user` roles are initialized with all registered channel
+types allowed. If a role has no allowed channel type entries, users with only
+that role cannot create or manage channel connections.
+
+`channels.module_permissions.manage_permissions` controls who may configure
+the channel access model in Role Management. It does not grant runtime access
+to every channel type by itself.
 
 Channel records are user-owned. A user should not manage another user's channel
 connections unless the system exposes an explicit administrative workflow for
@@ -22,8 +27,8 @@ that purpose.
 
 ## Governance Checklist {#governance-checklist}
 
-- Decide which roles may create and edit channels.
-- Decide which IM platforms are approved for production use.
+- Decide which roles may manage channel permissions.
+- Decide which channel types each role may use in production.
 - Require HTTPS webhook URLs.
 - Rotate IM credentials through the platform that issued them.
 - Disable unused connections.
@@ -65,6 +70,6 @@ For production IM integrations, record:
 
 - the business owner of the bot;
 - who can rotate the upstream app secret or webhook secret;
-- which AtlasClaw role can create or edit the connection;
+- which AtlasClaw roles have channel access for the relevant channel type;
 - whether inbound messages are allowed or the channel is outbound-only;
 - how to disable the connection during an incident.

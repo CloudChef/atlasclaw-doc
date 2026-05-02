@@ -32,6 +32,9 @@ This separation is intentional:
 
 All three layers must be correct for provider-backed chat operations.
 
+For IM-originated requests, the user's role must also allow the channel type
+that delivered the message.
+
 ## Auth Mode for IM Channels {#auth-mode-for-im-channels}
 
 When a provider is used from IM channels, remember the runtime path:
@@ -41,6 +44,8 @@ IM tool -> IM channel -> Agent -> Provider
 ```
 
 The IM channel does not carry the user's browser cookie or provider SSO token.
+The role still needs access to the skill, provider instance, and IM channel
+type before the Agent can run the provider-backed operation.
 If the provider must call the upstream system as the individual user, configure
 the provider instance with `auth_type: "user_token"` and ask users to save a
 Provider Token for that provider type and instance name.
@@ -64,9 +69,10 @@ treated as an access migration.
 3. Create a provider instance with the fields required by that schema.
 4. Assign provider runtime access to the roles that should use it.
 5. Enable the corresponding skills for those roles.
-6. If the provider uses user-scoped credentials, ask users to configure their
+6. Allow the IM channel types those roles should use.
+7. If the provider uses user-scoped credentials, ask users to configure their
    Provider Tokens.
-7. Test a read-only provider skill before enabling write or approval workflows.
+8. Test a read-only provider skill before enabling write or approval workflows.
 
 ## Provider-Specific Setup {#provider-specific-setup}
 

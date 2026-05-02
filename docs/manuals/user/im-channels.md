@@ -6,9 +6,10 @@ sidebar_position: 5
 
 # IM Channels
 
-With the default Standard User role, you can manage your own channel
-connections. The built-in `user` role is system-managed, so this default should
-be treated as a product default unless the deployment defines custom role policy.
+With the default Standard User role, you can manage your own connections for
+registered IM channel types. If a channel type is not visible on `/channels`,
+your role does not have access to that channel type or the backend has not
+registered its handler.
 
 ## User Workflow {#user-workflow}
 

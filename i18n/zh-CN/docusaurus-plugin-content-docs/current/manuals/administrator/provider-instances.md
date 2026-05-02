@@ -18,6 +18,8 @@ Provider 实例配置权限和运行时访问权限是两件事。角色可以�
 
 这三层需要同时正确：Provider 配置权限允许管理员创建或编辑实例记录；Provider 运行时权限允许用户通过 Agent 调用某个 Provider 实例；Provider 原生凭证决定上游系统最终允许哪些操作。
 
+如果请求来自 IM，用户角色还必须允许承载该消息的 Channel 类型。
+
 ## 面向 IM 渠道的认证模式 {#auth-mode-for-im-channels}
 
 Provider 被 IM 渠道使用时，需要记住运行时路径：
@@ -26,7 +28,7 @@ Provider 被 IM 渠道使用时，需要记住运行时路径：
 IM 工具 -> IM 渠道 -> Agent -> Provider
 ```
 
-IM 渠道不会携带用户在浏览器中的 Cookie，也不会携带目标 Provider 系统的 SSO Token。如果 Provider 必须以单个用户身份调用上游系统，应把 Provider 实例配置为 `auth_type: "user_token"`，并要求用户为对应 Provider 类型和实例名保存 Provider Token。
+IM 渠道不会携带用户在浏览器中的 Cookie，也不会携带目标 Provider 系统的 SSO Token。角色仍需要同时拥有 Skill、Provider 实例和 IM Channel 类型访问权，Agent 才能执行 Provider 操作。如果 Provider 必须以单个用户身份调用上游系统，应把 Provider 实例配置为 `auth_type: "user_token"`，并要求用户为对应 Provider 类型和实例名保存 Provider Token。
 
 如果 Provider 使用管理员统一管理的共享凭证，则不需要用户配置个人 Token。这适用于使用 `provider_token`、username/password `credential` 或 `app_credentials` 的 Provider 实例。
 
@@ -41,8 +43,9 @@ IM 渠道不会携带用户在浏览器中的 Cookie，也不会携带目标 Pro
 3. 按 schema 创建 Provider 实例。
 4. 给需要使用的角色分配 Provider 运行时访问权。
 5. 为这些角色启用对应 Skill。
-6. 如果使用用户凭证模式，通知用户配置 Provider Token。
-7. 先测试只读 Skill，再开放写操作、审批或修复类流程。
+6. 允许这些角色需要使用的 IM Channel 类型。
+7. 如果使用用户凭证模式，通知用户配置 Provider Token。
+8. 先测试只读 Skill，再开放写操作、审批或修复类流程。
 
 ## Provider 专属设置 {#provider-specific-setup}
 

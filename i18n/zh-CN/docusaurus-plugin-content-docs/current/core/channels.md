@@ -29,7 +29,9 @@ sidebar_position: 7
 
 ## 连接生命周期 {#connection-lifecycle}
 
-拥有渠道权限的用户可以列出渠道类型、获取 schema、创建连接、验证配置、检查已保存连接、启用、禁用、编辑和删除连接。
+Channel catalog 会按当前用户的有效角色权限过滤。只有至少一个活跃角色在 `channels.channel_permissions` 中允许对应 Channel 类型时，用户才能列出该类型、获取 schema、创建连接、验证配置、检查已保存连接、启用、禁用、编辑和删除连接。
+
+Channel catalog 的 `include_all=true` 是治理视图，仅对可以管理角色权限或 Channel 权限的用户开放。
 
 ## 消息模型 {#message-model}
 

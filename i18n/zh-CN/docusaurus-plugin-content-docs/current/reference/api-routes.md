@@ -58,6 +58,8 @@ sidebar_position: 2
 - `/api/channels/{channel_type}/connections/{connection_id}/enable`
 - `/api/channels/{channel_type}/connections/{connection_id}/disable`
 
+普通 Channel catalog 只返回当前用户角色允许的 Channel 类型。只有可以管理角色权限或 Channel 权限的用户，才能通过 `include_all=true` 查看完整已注册 catalog。Channel lifecycle 路由要求用户有对应 `channel_type` 的访问权。
+
 ## Provider 发现 API {#provider-discovery-apis}
 
 - `/api/providers`

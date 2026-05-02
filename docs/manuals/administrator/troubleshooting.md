@@ -23,7 +23,7 @@ Use the following order:
 
 Admin navigation is permission-driven. Confirm the current user has permissions
 for the relevant module, such as `users.view`, `roles.view`,
-`model_configs.view`, or `channels.view`.
+`model_configs.view`, or `channels.module_permissions.manage_permissions`.
 
 If a user has several roles, remember that boolean permissions merge with OR
 semantics. If the page is still hidden, confirm the frontend session has been
@@ -32,7 +32,8 @@ refreshed after the role change.
 ## Provider Skill Is Not Available {#provider-skill-is-not-available}
 
 Check `providers_root`, provider package layout, provider schema, skill metadata,
-role skill permissions, and provider instance runtime permissions.
+role skill permissions, provider instance runtime permissions, and channel
+access when the request comes from an IM channel.
 
 Troubleshoot in layers:
 
@@ -40,7 +41,8 @@ Troubleshoot in layers:
 2. Provider instance exists and is active.
 3. Role has access to the provider instance.
 4. Role has the skill enabled.
-5. User has required user-scoped credentials, if any.
+5. Role has access to the IM channel type, when applicable.
+6. User has required user-scoped credentials, if any.
 
 ## Channel Connection Does Not Start {#channel-connection-does-not-start}
 

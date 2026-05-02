@@ -34,9 +34,14 @@ configuration and process inbound or outbound messages according to their mode.
 
 ## Connection Lifecycle {#connection-lifecycle}
 
-Users with channel permissions can list channel types, fetch a schema, create a
+The channel catalog is filtered by the current user's effective role
+permissions. A user can list a channel type, fetch its schema, create a
 connection, validate config, verify a saved connection, enable or disable it,
-edit it, and delete it.
+edit it, and delete it only when at least one active role has an allowed
+`channels.channel_permissions` entry for that channel type.
+
+`include_all=true` on the channel catalog is a governance view. It is available
+only to users who can manage role permissions or channel permissions.
 
 ## Message Model {#message-model}
 

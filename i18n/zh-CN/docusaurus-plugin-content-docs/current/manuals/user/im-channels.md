@@ -6,7 +6,7 @@ sidebar_position: 5
 
 # IM 渠道
 
-默认 Standard User 角色可以管理自己的渠道连接。内置 `user` 角色由系统管理，因此这项能力应视为产品默认行为，除非部署定义了自定义角色策略。
+默认 Standard User 角色可以管理已注册 IM Channel 类型下自己的连接。如果某个 Channel 类型没有出现在 `/channels`，说明你的角色未获得该 Channel 类型访问权，或者后端没有注册对应 handler。
 
 ## 用户流程 {#user-workflow}
 
