@@ -6,7 +6,8 @@ sidebar_position: 8
 
 # Approval Workflows
 
-The SmartCMP approval skill manages pending approval tasks.
+The SmartCMP approval skill manages pending approval tasks. It is separate from
+submitted request status lookup.
 
 ## Supported Actions {#supported-actions}
 
@@ -14,6 +15,14 @@ The SmartCMP approval skill manages pending approval tasks.
 - Fetch request details.
 - Approve a request with a reason.
 - Reject a request with a reason.
+
+## Boundary With Request Status {#boundary-with-request-status}
+
+Use approval tools only for pending approval tasks and approve/reject actions.
+Do not use approval tools for a user's submitted request status query or for
+questions such as "has my request been approved?" Those questions should use
+the request skill's `smartcmp_get_request_status` tool with the submitted
+Request ID.
 
 ## Governance {#governance}
 

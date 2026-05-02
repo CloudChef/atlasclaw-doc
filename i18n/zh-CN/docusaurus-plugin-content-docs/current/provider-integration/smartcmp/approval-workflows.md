@@ -6,7 +6,7 @@ sidebar_position: 8
 
 # 审批流程
 
-SmartCMP approval 技能用于管理待审批任务。
+SmartCMP approval 技能用于管理待审批任务。它和已提交申请的状态查询是不同能力。
 
 ## 支持操作 {#supported-actions}
 
@@ -14,6 +14,10 @@ SmartCMP approval 技能用于管理待审批任务。
 - 获取申请详情。
 - 带原因同意申请。
 - 带原因拒绝申请。
+
+## 和申请状态查询的边界 {#boundary-with-request-status}
+
+Approval 工具只用于待审批任务和同意/拒绝动作。不要用 approval 工具查询用户自己已提交申请的状态，也不要用它回答“我的申请是否已经审批通过”。这类问题应使用 request 技能的 `smartcmp_get_request_status` 工具，并传入提交后返回的 Request ID。
 
 ## 治理 {#governance}
 

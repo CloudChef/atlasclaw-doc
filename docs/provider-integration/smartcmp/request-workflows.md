@@ -1,13 +1,14 @@
 ---
 title: Request Workflows
-description: Submit SmartCMP service and resource requests.
+description: Submit SmartCMP service and resource requests and check submitted request status.
 sidebar_position: 7
 ---
 
 # Request Workflows
 
 The SmartCMP request skill helps users translate infrastructure needs into
-structured SmartCMP requests.
+structured SmartCMP requests. It also supports status lookup for submitted
+requests by the SmartCMP Request ID returned after submission.
 
 ## Typical Flow {#typical-flow}
 
@@ -18,7 +19,7 @@ structured SmartCMP requests.
 4. Build the request JSON.
 5. Show the full JSON preview and ask the user to confirm.
 6. Submit with `smartcmp_submit_request` only after confirmation.
-7. Track the resulting SmartCMP ticket or work order in SmartCMP.
+7. Track the resulting SmartCMP Request ID, ticket, or work order in SmartCMP.
 
 The service-list and business-group discovery steps are mandatory. If
 `smartcmp_list_available_bgs` returns exactly one business group, the agent can
@@ -35,6 +36,37 @@ the user to choose.
 
 Use datasource and resource-pool skills before submission when the user does not
 know the valid SmartCMP values.
+
+## Submitted Request Status {#submitted-request-status}
+
+Use `smartcmp_get_request_status` when the user asks about a submitted request,
+for example:
+
+- "check my request RES20260501000095 status";
+- "has request RES20260501000095 been approved?";
+- "is the request I just submitted approved?"
+
+The input is the user-visible SmartCMP Request ID returned by submission, such
+as `RES20260501000095` or `TIC20260316000001`. If the user refers to the request
+they just submitted, reuse the most recent Request ID from the current
+conversation. If no Request ID is available, ask the user for it.
+
+The status lookup is separate from approval actions. Use the request status tool
+for a user's submitted request status or approval result. Use the approval skill
+only for pending approval tasks and approve/reject actions.
+
+The status script returns stable fields such as `state`, `statusCategory`,
+`approvalPassed`, `currentStep`, `currentApprover`, `provisionState`, `error`,
+and `updatedAt`. The agent can explain those fields in the user's language.
+
+Common approval-result semantics:
+
+| State | Meaning |
+| --- | --- |
+| `APPROVAL_PENDING` | Approval has not passed yet; the request is still pending. |
+| `APPROVAL_REJECTED`, `APPROVAL_RETREATED` | Approval did not pass. |
+| `STARTED`, `TASK_RUNNING`, `WAIT_EXECUTE`, `FINISHED` | Approval passed or the request entered a later execution stage. |
+| `INITIALING`, `INITIALING_FAILED`, `FAILED`, `CANCELED` | Report the current state without claiming approval or rejection. |
 
 ## Information to Collect {#information-to-collect}
 

@@ -7,8 +7,9 @@ sidebar_position: 1
 # SmartCMP Provider
 
 SmartCMP Provider connects AtlasClaw to SmartCMP cloud management workflows.
-It supports resource requests, approvals, directory queries, resource
-operations, alarm handling, cost optimization, and resource compliance analysis.
+It supports resource requests, submitted request status lookup, approvals,
+directory queries, resource operations, alarm handling, cost optimization, and
+resource compliance analysis.
 
 The source of truth is the provider package:
 
@@ -34,8 +35,8 @@ details remain in the provider repository.
 
 | Area | Typical user intent |
 | --- | --- |
-| Request | Submit a service catalog or resource provisioning request. |
-| Approval | List pending approvals and approve or reject with a reason. |
+| Request | Submit a service catalog or resource provisioning request, or check a submitted request by Request ID. |
+| Approval | List pending approval tasks and approve or reject with a reason. |
 | Datasource | Discover services, business groups, templates, images, and resource facts. |
 | Resource pool | List and filter available SmartCMP resource pools. |
 | Resource | Browse resources, inspect cloud hosts, and perform start/stop operations. |

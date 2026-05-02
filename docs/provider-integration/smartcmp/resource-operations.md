@@ -30,6 +30,13 @@ after the target resource ID is resolved.
 Operations depend on the user's SmartCMP permissions and the target resource's
 current state.
 
+Successful operation output is intentionally concise. It should include the
+action, target resource IDs, submitted flag, user-facing message, and
+verification hint. It should not print raw SmartCMP request payloads or raw
+response details. If SmartCMP returns a business failure in an HTTP 200
+response, the tool should surface a concise error instead of reporting
+submission success.
+
 ## Operation Safety {#operation-safety}
 
 Start and stop actions change upstream resource state. Before operating, the

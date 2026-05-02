@@ -6,7 +6,7 @@ sidebar_position: 1
 
 # SmartCMP Provider
 
-SmartCMP Provider 将 AtlasClaw 连接到 SmartCMP 云管理平台工作流，支持资源申请、审批、目录查询、资源操作、告警、成本优化和资源合规分析。
+SmartCMP Provider 将 AtlasClaw 连接到 SmartCMP 云管理平台工作流，支持资源申请、已提交申请状态查询、审批、目录查询、资源操作、告警、成本优化和资源合规分析。
 
 权威来源是 Provider 包：
 
@@ -31,7 +31,7 @@ atlasclaw-providers/providers/SmartCMP-Provider/
 
 | 范围 | 典型意图 |
 | --- | --- |
-| Request | 提交服务目录或资源申请。 |
+| Request | 提交服务目录或资源申请，或按 Request ID 查询已提交申请状态。 |
 | Approval | 列出待审批任务，并带原因同意或拒绝。 |
 | Datasource | 查询服务、业务组、模板、镜像和资源事实。 |
 | Resource pool | 列出和过滤资源池。 |
