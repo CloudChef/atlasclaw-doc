@@ -19,7 +19,7 @@ requests by the SmartCMP Request ID returned after submission.
 4. Build the request JSON.
 5. Show the full JSON preview and ask the user to confirm.
 6. Submit with `smartcmp_submit_request` only after confirmation.
-7. Track the resulting SmartCMP Request ID, ticket, or work order in SmartCMP.
+7. Track the resulting SmartCMP user-facing Request ID, ticket, or work order in SmartCMP.
 
 The service-list and business-group discovery steps are mandatory. If
 `smartcmp_list_available_bgs` returns exactly one business group, the agent can
@@ -47,13 +47,35 @@ for example:
 - "is the request I just submitted approved?"
 
 The input is the user-visible SmartCMP Request ID returned by submission, such
-as `RES20260501000095` or `TIC20260316000001`. If the user refers to the request
-they just submitted, reuse the most recent Request ID from the current
-conversation. If no Request ID is available, ask the user for it.
+as `REQ20260501000095`, `RES20260501000095`, `TIC20260316000001`, or
+`CHG20260413000011`. If the user refers to the request they just submitted,
+reuse the most recent Request ID from the current conversation. If no
+user-facing Request ID is available, ask the user for it.
+
+Do not use SmartCMP internal UUID fields as Request IDs. The submit and status
+scripts may use internal IDs for provider API lookup, but those values must not
+be shown to the agent or used in follow-up status queries.
 
 The status lookup is separate from approval actions. Use the request status tool
 for a user's submitted request status or approval result. Use the approval skill
 only for pending approval tasks and approve/reject actions.
+
+## Request ID Contract {#request-id-contract}
+
+`smartcmp_submit_request` reports one user-facing identifier back to the agent:
+`requestId`. That value is the SmartCMP Request ID that users see in the UI,
+for example `REQ20260501000095`, `RES20260501000095`,
+`TIC20260316000001`, or `CHG20260413000011`.
+
+The submit script may receive several upstream aliases from SmartCMP, including
+`workflowId`, `requestNo`, or `customizedId`. It normalizes those aliases to the
+single `requestId` field before returning the result to the agent. Internal
+UUID-shaped lookup IDs are provider implementation details and must not be used
+as the Request ID in user-facing replies or follow-up tool calls.
+
+Follow-up status queries must use the same user-facing Request ID. If a user
+asks about "the request I just submitted", reuse the latest `requestId` from
+the conversation instead of asking for or exposing an internal ID.
 
 The status script returns stable fields such as `state`, `statusCategory`,
 `approvalPassed`, `currentStep`, `currentApprover`, `provisionState`, `error`,

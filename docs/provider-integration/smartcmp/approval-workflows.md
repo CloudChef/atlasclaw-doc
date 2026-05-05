@@ -13,8 +13,8 @@ submitted request status lookup.
 
 - List pending approvals.
 - Fetch request details.
-- Approve a request with a reason.
-- Reject a request with a reason.
+- Approve a request by SmartCMP Request ID, with an optional reason.
+- Reject a request by SmartCMP Request ID, with an optional reason.
 
 ## Boundary With Request Status {#boundary-with-request-status}
 
@@ -23,6 +23,22 @@ Do not use approval tools for a user's submitted request status query or for
 questions such as "has my request been approved?" Those questions should use
 the request skill's `smartcmp_get_request_status` tool with the submitted
 Request ID.
+
+## Request ID Contract {#request-id-contract}
+
+Approval tools use the same user-facing SmartCMP Request ID that appears in the
+pending approval list and SmartCMP UI, for example `RES20260505000010`,
+`TIC20260502000003`, or `CHG20260413000011`.
+
+The pending list exposes `APPROVAL_META.requestId` for each row. When a user
+says "approve 1", "同意 1", "reject #2", or another row-based selection, the
+agent must resolve that row to `APPROVAL_META.requestId` before calling
+`smartcmp_approve` or `smartcmp_reject`.
+
+Do not pass display row numbers, placeholder values, or UUID-shaped internal
+SmartCMP IDs to approval action tools. The approve and reject scripts resolve
+the user-facing Request ID to the provider's internal approval action ID before
+calling SmartCMP.
 
 ## Governance {#governance}
 
@@ -37,7 +53,11 @@ power inside SmartCMP.
 3. Review request purpose, resource sizing, target environment, and cost impact.
 4. Ask the user for an approval or rejection reason if it was not provided.
 5. Execute approve or reject only after the user intent is explicit.
-6. Report the upstream result and any returned request or workflow identifier.
+6. Report the upstream result and the user-facing Request ID.
+
+For batch approvals or rejections, resolve every selected row to a Request ID
+from the latest pending approval metadata. If that metadata is unavailable or
+stale, list pending approvals again before executing the action.
 
 ## When to Escalate {#when-to-escalate}
 
