@@ -25,6 +25,18 @@ sidebar_position: 2
 - `/api/memory/search`
 - `/api/memory/write`
 
+## Embed APIs {#embed-apis}
+
+- `/api/embed/bootstrap`
+- `/api/embed/context/resolve`
+
+Bootstrap validates the `menu` or `floating` surface against the configured
+default embedded Provider. Context resolution accepts a floating surface ID,
+page generation, and normalized host path, then returns `resolved`,
+`unsupported`, or `unavailable`. See [Embedded Menu and Floating
+UI](/provider-integration/embedded-menu-and-floating-ui) for the
+Provider route and Context lifecycle contract.
+
 ## Auth APIs {#auth-apis}
 
 - `/api/auth/local/login`

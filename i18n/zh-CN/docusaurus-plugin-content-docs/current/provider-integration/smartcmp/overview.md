@@ -6,7 +6,7 @@ sidebar_position: 1
 
 # SmartCMP Provider
 
-SmartCMP Provider 将 AtlasClaw 连接到 SmartCMP 云管理平台工作流，支持资源申请、已提交申请状态查询、审批、目录查询、资源操作、告警、成本优化和资源合规分析。
+SmartCMP Provider 将 AtlasClaw 连接到 SmartCMP 云管理平台工作流，支持资源申请、已提交申请状态查询、审批、目录查询、动态资源分析与操作、告警与资源健康分析、成本优化和资源合规分析。
 
 权威来源是 Provider 包：
 
@@ -19,6 +19,8 @@ atlasclaw-providers/providers/SmartCMP-Provider/
 ```
 
 本文档总结稳定的安装、配置和使用流程。实现细节仍以 Provider 仓库为准。
+
+SmartCMP 被配置为 HostApp Provider 时，AtlasClaw 会提供共享同一套 SmartCMP Cookie 认证的独立菜单 UI 和悬浮 UI。菜单 UI 提供完整 Chat，悬浮 UI 则动态跟随受支持的 SmartCMP 页面。SmartCMP Provider 的路由定义把当前页面绑定到审批、申请、告警、费用建议或资源对象，并展示符合对象当前状态的操作。详见[内嵌菜单与悬浮 UI](../embedded-menu-and-floating-ui.md)。
 
 ## 读者 {#audience}
 
@@ -35,7 +37,7 @@ atlasclaw-providers/providers/SmartCMP-Provider/
 | Approval | 列出待审批任务，并带原因同意或拒绝。 |
 | Datasource | 查询服务、业务组、模板、镜像和资源事实。 |
 | Resource pool | 列出和过滤资源池。 |
-| Resource | 浏览资源、查看云主机并执行 start/stop。 |
-| Alarm | 在明确请求时列出、分析、mute、resolve 或 reopen 告警。 |
-| Cost optimization | 查看建议、执行原生修复并跟踪整改。 |
+| Resource | 浏览资源、综合分析单个资源，并执行允许的 day-2 操作。 |
+| Alarm and health | 分析告警，或根据组件监控证据判断资源运行健康。 |
+| Cost optimization | 查看建议或直接分析单个资源，只对已有发现执行原生修复并跟踪整改。 |
 | Resource compliance | 分析资源生命周期、补丁、安全和配置状态。 |

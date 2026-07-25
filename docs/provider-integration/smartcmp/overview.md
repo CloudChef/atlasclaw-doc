@@ -8,8 +8,8 @@ sidebar_position: 1
 
 SmartCMP Provider connects AtlasClaw to SmartCMP cloud management workflows.
 It supports resource requests, submitted request status lookup, approvals,
-directory queries, resource operations, alarm handling, cost optimization, and
-resource compliance analysis.
+directory queries, dynamic resource analysis and operations, alarm and resource
+health analysis, cost optimization, and resource compliance analysis.
 
 The source of truth is the provider package:
 
@@ -23,6 +23,14 @@ atlasclaw-providers/providers/SmartCMP-Provider/
 
 This documentation summarizes stable setup and user workflows. Implementation
 details remain in the provider repository.
+
+When SmartCMP is configured as the HostApp Provider, AtlasClaw exposes
+independent menu and floating UIs that share the same SmartCMP Cookie
+authentication. The menu provides full Chat, while the floating UI dynamically
+follows supported SmartCMP pages. SmartCMP Provider route definitions bind the
+current page to an approval, request, alarm, cost recommendation, or resource
+object and expose actions appropriate to that object's current state. See
+[Embedded Menu and Floating UI](../embedded-menu-and-floating-ui.md).
 
 ## Audience {#audience}
 
@@ -39,9 +47,9 @@ details remain in the provider repository.
 | Approval | List pending approval tasks and approve or reject with a reason. |
 | Datasource | Discover services, business groups, templates, images, and resource facts. |
 | Resource pool | List and filter available SmartCMP resource pools. |
-| Resource | Browse resources, inspect cloud hosts, and perform start/stop operations. |
-| Alarm | List, analyze, mute, resolve, or reopen alerts when explicitly requested. |
-| Cost optimization | Review recommendations, execute native fixes, and track remediation. |
+| Resource | Browse resources, comprehensively analyze one resource, and perform permitted day-2 operations. |
+| Alarm and health | Analyze alerts or determine a resource's runtime health from its component monitoring evidence. |
+| Cost optimization | Review recommendations or directly analyze one resource, execute native fixes for existing findings, and track remediation. |
 | Resource compliance | Analyze resource lifecycle, patch, security, and configuration posture. |
 
 SmartCMP permissions still come from SmartCMP. AtlasClaw role access only

@@ -1,0 +1,190 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="860" viewBox="0 0 1440 860" role="img" aria-labelledby="title desc">
+  <title id="title">AtlasClaw 内嵌模式与企业系统</title>
+  <desc id="desc">企业系统提供独立菜单与悬浮界面。AtlasClaw 将内嵌运行时固定绑定到 HostApp Provider，由它通过现有系统 API、权限、流程与审计解析 Context、Domain Skills 和对象操作。</desc>
+  <defs>
+    <linearGradient id="page" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7f8f5"/>
+      <stop offset="1" stop-color="#eef5f0"/>
+    </linearGradient>
+    <linearGradient id="provider" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9fd0bd"/>
+      <stop offset="1" stop-color="#c7df9b"/>
+    </linearGradient>
+    <linearGradient id="runtime" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#313439"/>
+      <stop offset="1" stop-color="#253c37"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#20342f" flood-opacity=".15"/>
+    </filter>
+    <marker id="arrowDark" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#34373b"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#72b89f"/>
+    </marker>
+    <style>
+      .display { font: 700 29px ui-sans-serif, system-ui, sans-serif; fill: #282b2f; }
+      .title { font: 700 18px ui-sans-serif, system-ui, sans-serif; fill: #282b2f; }
+      .title-light { font: 700 18px ui-sans-serif, system-ui, sans-serif; fill: #fff; }
+      .body { font: 500 14px ui-sans-serif, system-ui, sans-serif; fill: #5d6364; }
+      .body-dark { font: 500 14px ui-sans-serif, system-ui, sans-serif; fill: #303538; }
+      .body-light { font: 500 14px ui-sans-serif, system-ui, sans-serif; fill: #d7e3df; }
+      .label { font: 700 11px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 1.4px; fill: #498b75; }
+      .label-light { font: 700 11px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 1.4px; fill: #c7df9b; }
+      .micro { font: 600 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #68706f; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="860" rx="32" fill="url(#page)"/>
+  <path d="M0 158H1440M0 760H1440" stroke="#d9e1dc"/>
+  <circle cx="1320" cy="86" r="115" fill="#9fd0bd" opacity=".12"/>
+  <circle cx="87" cy="790" r="155" fill="#c7df9b" opacity=".12"/>
+
+  <text x="70" y="72" class="label">ATLASCLAW 内嵌模式</text>
+  <text x="70" y="116" class="display">AtlasClaw 为现有系统带来智能能力</text>
+  <g transform="translate(1166 58)">
+    <rect width="204" height="50" rx="25" fill="#fff" stroke="#a8b9b2"/>
+    <circle cx="26" cy="25" r="7" fill="#76bfa8"/>
+    <text x="46" y="30" class="micro">无需重构系统</text>
+  </g>
+
+  <!-- Existing enterprise system UI -->
+  <g transform="translate(54 202)" filter="url(#shadow)">
+    <rect width="315" height="488" rx="24" fill="#fff" stroke="#cdd7d2"/>
+    <rect width="315" height="72" rx="24" fill="#f1f4f1"/>
+    <path d="M0 72H315" stroke="#d5ddd9"/>
+    <circle cx="34" cy="35" r="13" fill="#34373b"/>
+    <text x="59" y="31" class="title">现有企业系统</text>
+    <text x="59" y="51" class="body">现有系统界面</text>
+
+    <g transform="translate(24 102)">
+      <text class="label">入口 01</text>
+      <rect y="18" width="267" height="116" rx="16" fill="#f8faf8" stroke="#d8dfdc"/>
+      <rect x="18" y="40" width="42" height="42" rx="12" fill="#34373b"/>
+      <path d="M31 52H47M31 61H47M31 70H42" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+      <text x="75" y="55" class="title">独立菜单访问</text>
+      <text x="75" y="78" class="body">从菜单访问完整 Agent</text>
+      <text x="75" y="102" class="micro">surface=menu</text>
+    </g>
+
+    <g transform="translate(24 264)">
+      <text class="label">入口 02</text>
+      <rect y="18" width="267" height="164" rx="16" fill="#eef8f4" stroke="#9fd0bd"/>
+      <rect x="18" y="40" width="42" height="42" rx="21" fill="#76bfa8"/>
+      <path d="M31 54H47M31 63H43M46 72L51 77" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+      <text x="75" y="55" class="title">悬浮助手</text>
+      <text x="75" y="78" class="body">感知当前页面</text>
+      <rect x="18" y="105" width="231" height="50" rx="11" fill="#fff" stroke="#cbdcd5"/>
+      <text x="31" y="126" class="micro">PAGE_CHANGED</text>
+      <text x="31" y="145" class="body">只发送 path + generation</text>
+    </g>
+  </g>
+
+  <!-- AtlasClaw boundary -->
+  <g transform="translate(422 182)" filter="url(#shadow)">
+    <rect width="592" height="538" rx="28" fill="url(#runtime)"/>
+    <text x="30" y="39" class="label-light">ATLASCLAW</text>
+    <text x="30" y="68" class="title-light">AtlasClaw 内嵌 Agent 运行时</text>
+    <rect x="30" y="96" width="532" height="114" rx="18" fill="#fff" fill-opacity=".075" stroke="#fff" stroke-opacity=".14"/>
+    <g transform="translate(51 121)">
+      <circle cx="9" cy="8" r="8" fill="#c7df9b"/>
+      <text x="27" y="13" class="body-light">共享 Chat 与 Session</text>
+      <circle cx="9" cy="42" r="8" fill="#9fd0bd"/>
+      <text x="27" y="47" class="body-light">Context 快照与过期防护</text>
+      <circle cx="290" cy="8" r="8" fill="#c7df9b"/>
+      <text x="308" y="13" class="body-light">Agent 编排</text>
+      <circle cx="290" cy="42" r="8" fill="#9fd0bd"/>
+      <text x="308" y="47" class="body-light">RBAC · 确认 · 审计</text>
+    </g>
+
+    <path d="M296 224V260" stroke="#c7df9b" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+    <rect x="196" y="221" width="200" height="25" rx="12.5" fill="#24302d"/>
+    <text x="217" y="238" class="label-light">固定绑定 embed_integration</text>
+
+    <!-- HostApp Provider -->
+    <g transform="translate(30 270)">
+      <rect width="532" height="238" rx="22" fill="url(#provider)"/>
+      <text x="24" y="34" class="label">融合核心</text>
+      <text x="24" y="69" class="title">HostApp Provider</text>
+      <text x="24" y="93" class="body-dark">随 AtlasClaw 安装，不是企业系统新增服务</text>
+      <text x="24" y="113" class="body-dark">复用现有系统 API、身份与权限</text>
+      <g transform="translate(24 137)">
+        <rect width="113" height="72" rx="13" fill="#fff" fill-opacity=".72"/>
+        <text x="14" y="28" class="micro">ROUTE</text>
+        <text x="14" y="49" class="body-dark">Manifest</text>
+        <text x="14" y="65" class="body-dark">页面匹配</text>
+      </g>
+      <g transform="translate(148 137)">
+        <rect width="113" height="72" rx="13" fill="#fff" fill-opacity=".72"/>
+        <text x="14" y="28" class="micro">OBJECT</text>
+        <text x="14" y="49" class="body-dark">Resolver</text>
+        <text x="14" y="65" class="body-dark">对象解析</text>
+      </g>
+      <g transform="translate(272 137)">
+        <rect width="113" height="72" rx="13" fill="#fff" fill-opacity=".72"/>
+        <text x="14" y="28" class="micro">DOMAIN</text>
+        <text x="14" y="49" class="body-dark">Skills</text>
+        <text x="14" y="65" class="body-dark">业务能力</text>
+      </g>
+      <g transform="translate(396 137)">
+        <rect width="112" height="72" rx="13" fill="#fff" fill-opacity=".72"/>
+        <text x="14" y="28" class="micro">ACTION</text>
+        <text x="14" y="49" class="body-dark">Builder</text>
+        <text x="14" y="65" class="body-dark">动态操作</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Existing system backend -->
+  <g transform="translate(1068 202)" filter="url(#shadow)">
+    <rect width="318" height="488" rx="24" fill="#fff" stroke="#cdd7d2"/>
+    <rect width="318" height="72" rx="24" fill="#f1f4f1"/>
+    <path d="M0 72H318" stroke="#d5ddd9"/>
+    <circle cx="34" cy="35" r="13" fill="#76bfa8"/>
+    <path d="M27 29H41V41H27Z" fill="none" stroke="#fff" stroke-width="2"/>
+    <text x="59" y="31" class="title">现有系统后端</text>
+    <text x="59" y="51" class="body">沿用现有后端架构</text>
+    <g transform="translate(24 106)">
+      <rect width="270" height="58" rx="14" fill="#f8faf8" stroke="#d8dfdc"/>
+      <text x="19" y="26" class="title">现有 API 与数据</text>
+      <text x="19" y="45" class="body">现有 API 与业务对象</text>
+    </g>
+    <g transform="translate(24 180)">
+      <rect width="270" height="58" rx="14" fill="#f8faf8" stroke="#d8dfdc"/>
+      <text x="19" y="26" class="title">现有身份与 RBAC</text>
+      <text x="19" y="45" class="body">现有登录与权限</text>
+    </g>
+    <g transform="translate(24 254)">
+      <rect width="270" height="58" rx="14" fill="#f8faf8" stroke="#d8dfdc"/>
+      <text x="19" y="26" class="title">现有业务流程</text>
+      <text x="19" y="45" class="body">现有审批与业务流程</text>
+    </g>
+    <g transform="translate(24 328)">
+      <rect width="270" height="58" rx="14" fill="#f8faf8" stroke="#d8dfdc"/>
+      <text x="19" y="26" class="title">现有审计</text>
+      <text x="19" y="45" class="body">现有审计边界</text>
+    </g>
+  </g>
+
+  <!-- connections -->
+  <path d="M369 343H409" stroke="#34373b" stroke-width="2.5" marker-end="url(#arrowDark)"/>
+  <rect x="372" y="310" width="122" height="23" rx="11.5" fill="#fff"/>
+  <text x="383" y="326" class="micro">完整 AGENT</text>
+  <path d="M369 512H409" stroke="#72b89f" stroke-width="3" marker-end="url(#arrowGreen)"/>
+  <rect x="235" y="440" width="154" height="23" rx="11.5" fill="#eef8f4"/>
+  <text x="246" y="456" class="micro">动态 CONTEXT</text>
+
+  <path d="M1014 529H1055" stroke="#72b89f" stroke-width="3" marker-end="url(#arrowGreen)"/>
+  <path d="M1055 595H1014" stroke="#34373b" stroke-width="2.5" marker-end="url(#arrowDark)"/>
+  <rect x="1010" y="279" width="150" height="25" rx="12.5" fill="#fff"/>
+  <text x="1023" y="296" class="micro">系统 COOKIE + API</text>
+  <rect x="963" y="616" width="170" height="25" rx="12.5" fill="#fff"/>
+  <text x="977" y="633" class="micro">数据 + ACL 结果</text>
+
+  <g transform="translate(70 783)">
+    <circle cx="9" cy="8" r="8" fill="#76bfa8"/>
+    <text x="29" y="13" class="body-dark">企业系统只增加访问入口与轻量页面桥接；现有 API、身份、权限、流程和审计继续沿用。</text>
+    <text x="29" y="38" class="body">无需重构企业系统现有后端架构。</text>
+  </g>
+</svg>

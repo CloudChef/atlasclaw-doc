@@ -19,6 +19,7 @@ sidebar_position: 1
 | `model` | 模型服务、模型 Token 和主模型设置。 |
 | `auth` | 认证 Provider 和 Token 设置。 |
 | `service_providers` | Provider 实例配置。 |
+| `embed_integration` | 两支独立 menu/floating UI 使用的可选默认 Provider 绑定和共享 Chat scope。 |
 | `agent_defaults` | Agent turn 的运行限制和 prompt mode 默认值。 |
 | `messages` | 消息队列、debounce 和去重行为。 |
 | `compaction` | 长上下文压缩阈值。 |
@@ -94,7 +95,7 @@ sidebar_position: 1
 | Provider | 场景 | 关键字段 |
 | --- | --- | --- |
 | `local` | 本地用户名/密码登录。 | `auth.local.enabled`、`default_admin_username`、`default_admin_password`、`auth.jwt.*` |
-| `host_cookie` | 嵌入在已认证的宿主系统后面。 | `auth.host_cookie.cookie_name`、`subject_cookie_name`、display/user/tenant cookie 字段 |
+| `host_cookie` | 内嵌到已经完成用户认证的企业系统。 | `auth.host_cookie.cookie_name`、`subject_cookie_name`、display/user/tenant cookie 字段 |
 | `oidc` | OIDC/OAuth2 SSO。 | `issuer`、`client_id`、`client_secret`、endpoints、`redirect_uri` |
 | `dingtalk` | DingTalk SSO 登录。 | `app_key`、`app_secret`、`corp_id`、`redirect_uri` |
 | `none` | 开发/no-auth 模式。 | `auth.none.default_user_id` |
@@ -153,6 +154,21 @@ sidebar_position: 1
 ```
 
 第一层 key 是 Provider 类型，第二层 key 是实例名，内部对象是 Provider 实例模板。Provider 专属字段由 `provider.schema.json` 定义。
+
+### 上下文感知 Embed Section {#context-aware-embed-section}
+
+`embed_integration` 选择上下文感知 menu 和 floating 界面使用的唯一 Provider 和已配置实例：
+
+```json
+{
+  "embed_integration": {
+    "provider_type": "example_provider",
+    "provider_instance": "default"
+  }
+}
+```
+
+该 section 只支持这两个字段。Provider 包必须包含悬浮页面 Context 使用的 `assistant_context/routes.json`；企业系统代码不能选择其他 Provider，也不能提供 manifest 路径。两支 UI 仍然使用 `auth` 和 Provider 实例中配置的同一套企业系统 Cookie 认证。详见[内嵌菜单与悬浮 UI](/provider-integration/embedded-menu-and-floating-ui)。
 
 ## 环境变量展开 {#environment-expansion}
 

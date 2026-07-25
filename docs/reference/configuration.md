@@ -19,6 +19,7 @@ sidebar_position: 1
 | `model` | Model provider, model tokens, and primary model settings. |
 | `auth` | Authentication provider and token settings. |
 | `service_providers` | Provider instance configuration. |
+| `embed_integration` | Optional default Provider binding and shared Chat scope for the independent menu/floating surfaces. |
 | `agent_defaults` | Runtime limits and prompt mode defaults for agent turns. |
 | `messages` | Message queue, debounce, and deduplication behavior. |
 | `compaction` | Long-context compaction thresholds. |
@@ -97,7 +98,7 @@ storage for production.
 | Provider | Use case | Key fields |
 | --- | --- | --- |
 | `local` | Local username/password login. | `auth.local.enabled`, `default_admin_username`, `default_admin_password`, `auth.jwt.*` |
-| `host_cookie` | Embedded behind a host system that already authenticates users. | `auth.host_cookie.cookie_name`, `subject_cookie_name`, display/user/tenant cookie fields |
+| `host_cookie` | Embedded in an Enterprise System that already authenticates users. | `auth.host_cookie.cookie_name`, `subject_cookie_name`, display/user/tenant cookie fields |
 | `oidc` | OIDC/OAuth2 SSO. | `issuer`, `client_id`, `client_secret`, endpoints, `redirect_uri` |
 | `dingtalk` | DingTalk SSO login. | `app_key`, `app_secret`, `corp_id`, `redirect_uri` |
 | `none` | Development/no-auth mode. | `auth.none.default_user_id` |
@@ -161,6 +162,27 @@ ordered list of backup token IDs. `selection_strategy`, `priority`, and
 The first key is the provider type. The second key is the instance name. The
 inner object is the provider instance template. Provider-specific fields are
 declared by `provider.schema.json`.
+
+### Context-Aware Embed Section {#context-aware-embed-section}
+
+`embed_integration` selects the single Provider and configured instance used by
+context-aware menu and floating surfaces:
+
+```json
+{
+  "embed_integration": {
+    "provider_type": "example_provider",
+    "provider_instance": "default"
+  }
+}
+```
+
+These are the only fields in this section. The Provider package must contain
+`assistant_context/routes.json` for floating page Context; Enterprise System
+code cannot select another Provider or provide a manifest path. Both surfaces
+still use the same enterprise-system Cookie authentication configured under
+`auth` and the Provider instance. See [Embedded Menu and Floating
+UI](/provider-integration/embedded-menu-and-floating-ui).
 
 ### Webhook and Robot Profiles {#webhook-and-robot-profiles}
 

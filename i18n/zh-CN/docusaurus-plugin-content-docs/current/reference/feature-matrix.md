@@ -9,6 +9,8 @@ sidebar_position: 4
 | 功能 | 主要角色 | UI 入口 | API 区域 | 源码区域 |
 | --- | --- | --- | --- | --- |
 | 对话 | Standard User | `/` | `/api/agent`, `/api/sessions` | `app/atlasclaw/agent`, `api/routes_agent.py` |
+| 内嵌菜单 UI | Standard User | 内嵌 `surface=menu` | `/api/embed/bootstrap`、Chat API | `core/embed`, `scripts/embed` |
+| 上下文感知悬浮 UI | Standard User | 内嵌 `surface=floating` | `/api/embed/*`, `/api/agent/run` | `core/embed`, `scripts/embed` |
 | 账号资料 | Standard User | `/account` | `/api/users/me/*` | `api/api_routes.py`, `pages/account-settings.js` |
 | Provider Token | Standard User | `/account` | `/api/users/me/provider-settings` | `api/api_routes.py` |
 | IM 渠道 | Standard User | `/channels` | `/api/channels/*` | `channels/`, `pages/channels.js` |

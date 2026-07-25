@@ -1,13 +1,13 @@
 ---
-title: Resource Operations
-description: Browse and operate SmartCMP resources.
+title: Resource Analysis and Operations
+description: Browse, comprehensively analyze, and operate SmartCMP resources.
 sidebar_position: 9
 ---
 
-# Resource Operations
+# Resource Analysis and Operations
 
-SmartCMP resource skills support read-only resource browsing and selected day-2
-operations.
+SmartCMP resource skills support read-only resource browsing, comprehensive
+single-resource analysis, and selected day-2 operations.
 
 ## Browsing {#browsing}
 
@@ -21,6 +21,28 @@ Discovery examples include:
 - filter hosts by keyword;
 - refresh and analyze a single host by resource ID;
 - fetch resource details for compliance or troubleshooting.
+
+## Comprehensive Resource Analysis {#comprehensive-resource-analysis}
+
+A resolved cloud-resource or virtual-machine page can expose a dynamic
+**Analyze** action. It uses the `resource` Skill as a coordinator and keeps one
+exact internal SmartCMP resource target across four existing read-only
+analyzers:
+
+1. current alerts and currently resolved alerts whose trigger time is inside
+   the configured lookback;
+2. runtime health from the resource component's Prometheus monitoring model;
+3. generic compliance risk from a bounded and redacted resource profile;
+4. platform-confirmed and LLM-inferred cost optimization opportunities.
+
+The final response separates evidence and gaps for each dimension, then
+highlights cross-dimensional relationships. Failure or missing evidence in one
+dimension does not suppress the other dimensions. Comprehensive analysis does
+not change the resource.
+
+The action is generated from the current resource object. When the user
+navigates to another supported SmartCMP page, the floating assistant resolves
+a new Context and the older resource action becomes invalid.
 
 ## Operations {#operations}
 
@@ -40,9 +62,11 @@ submission success.
 ## Operation Safety {#operation-safety}
 
 Start and stop actions change upstream resource state. Before operating, the
-agent must show the target resource name, resource ID, current state when
-available, and intended action. It should ask for explicit confirmation, such as
-`确认要执行吗？`, stop, and call the operation only after the user confirms.
+agent must show the target resource name, current state when available, and
+intended action. The stable SmartCMP resource ID is resolved and retained
+internally rather than requested from or exposed to the user. The agent should
+ask for explicit confirmation, such as `确认要执行吗？`, stop, and call the
+operation only after the user confirms.
 
 ## Common Blockers {#common-blockers}
 

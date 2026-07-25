@@ -25,6 +25,13 @@ sidebar_position: 2
 - `/api/memory/search`
 - `/api/memory/write`
 
+## Embed API {#embed-apis}
+
+- `/api/embed/bootstrap`
+- `/api/embed/context/resolve`
+
+Bootstrap 使用已配置的默认内嵌 Provider 分别校验独立的 `menu` 或 `floating` 界面。两支 UI 使用相同的企业系统 Cookie 认证；Context 解析只服务悬浮 UI，接收界面 ID、页面 generation 和标准化企业系统路径，并返回 `resolved`、`unsupported` 或 `unavailable`。Provider 路由和 Context 生命周期契约详见[内嵌菜单与悬浮 UI](/provider-integration/embedded-menu-and-floating-ui)。
+
 ## 认证 API {#auth-apis}
 
 - `/api/auth/local/login`

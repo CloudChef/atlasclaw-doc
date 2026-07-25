@@ -38,6 +38,15 @@ html[data-theme='dark'] {
   width: 100%;
 }
 
+@media (max-width: 996px) {
+  .theme-doc-markdown table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+  }
+}
+
 .theme-doc-sidebar-container {
   border-right: 1px solid var(--ifm-toc-border-color);
 }

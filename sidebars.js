@@ -41,6 +41,7 @@ const sidebars = {
     'provider-integration/provider-auth-model',
     'provider-integration/webhook-robot-execution',
     'provider-integration/embedded-mode',
+    'provider-integration/embedded-menu-and-floating-ui',
     {
       type: 'category',
       label: 'SmartCMP',

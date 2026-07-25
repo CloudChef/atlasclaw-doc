@@ -5,6 +5,21 @@ Core-first documentation site for AtlasClaw.
 This repository uses Docusaurus and keeps English as the source language. Chinese
 translations live under `i18n/zh-CN/`.
 
+## Embedded Mode Documentation
+
+The documentation covers both independent Embedded Mode access points and their
+shared integration contract:
+
+- [Embedded Mode](docs/provider-integration/embedded-mode.md) explains
+  Enterprise System Cookie identity and the configured HostApp Provider.
+- [Embedded Menu and Floating
+  UI](docs/provider-integration/embedded-menu-and-floating-ui.md) explains menu
+  access, floating page lifecycle messages, dynamic Context matching, Domain
+  Skills, and state-aware object actions.
+
+English and Chinese pages use localized architecture diagrams. SmartCMP remains
+the concrete Provider reference, while Core behavior stays provider-agnostic.
+
 ## Local Development
 
 ```bash

@@ -9,6 +9,8 @@ sidebar_position: 4
 | Feature | Primary role | UI entry | API area | Source area |
 | --- | --- | --- | --- | --- |
 | Chat | Standard User | `/` | `/api/agent`, `/api/sessions` | `app/atlasclaw/agent`, `api/routes_agent.py` |
+| Embedded menu UI | Standard User | Embedded `surface=menu` | `/api/embed/bootstrap`, Chat APIs | `core/embed`, `scripts/embed` |
+| Context-aware floating UI | Standard User | Embedded `surface=floating` | `/api/embed/*`, `/api/agent/run` | `core/embed`, `scripts/embed` |
 | Account profile | Standard User | `/account` | `/api/users/me/*` | `api/api_routes.py`, `pages/account-settings.js` |
 | Provider tokens | Standard User | `/account` | `/api/users/me/provider-settings` | `api/api_routes.py` |
 | IM channels | Standard User | `/channels` | `/api/channels/*` | `channels/`, `pages/channels.js` |
