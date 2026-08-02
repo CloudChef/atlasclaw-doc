@@ -12,7 +12,8 @@ single-resource analysis, and selected day-2 operations.
 ## Browsing {#browsing}
 
 Users can list resources, filter cloud hosts, inspect a resource by ID, and use
-the normalized resource view returned by provider scripts.
+the normalized resource view returned by typed Provider operations through the
+thin AtlasClaw Skill adapter.
 
 Discovery examples include:
 
@@ -42,7 +43,8 @@ not change the resource.
 
 The action is generated from the current resource object. When the user
 navigates to another supported SmartCMP page, the floating assistant resolves
-a new Context and the older resource action becomes invalid.
+a new Context. A later Chat submission carrying the older Context is rejected;
+a turn that was already accepted continues through the ordinary Chat runtime.
 
 ## Operations {#operations}
 

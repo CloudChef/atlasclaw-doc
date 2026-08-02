@@ -73,10 +73,11 @@ the credential used only for authorized webhook robot execution.
 }
 ```
 
-Recommended SmartCMP robot credentials use `cmp_tk_*` tokens. SmartCMP scripts
-send those tokens as `Authorization: Bearer <token>`. SmartCMP audit trails
-should show the configured robot/admin account for approval actions and for
-webhook request submissions that do not forward SmartCMP user cookies.
+Recommended SmartCMP robot credentials use `cmp_tk_*` tokens. SmartCMP Provider
+operations send those tokens as `Authorization: Bearer <token>`. SmartCMP
+audit trails should show the configured robot/admin account for approval
+actions and for webhook request submissions that do not forward SmartCMP user
+cookies.
 
 The webhook payload must include the selected provider instance and robot
 profile:
@@ -97,8 +98,9 @@ for the generic webhook configuration and security rules.
 
 ## Cookie or Credential Mode {#cookie-or-credential-mode}
 
-Cookie mode uses a SmartCMP session cookie. Credential mode logs in with
-username and password and may cache a runtime cookie.
+Cookie mode uses a request-scoped or explicitly configured SmartCMP session
+cookie. Credential mode logs in once for each Provider invocation and keeps the
+resulting session request-scoped; the Provider does not maintain a Cookie cache.
 
 Use user token mode when you need clean per-user accountability.
 

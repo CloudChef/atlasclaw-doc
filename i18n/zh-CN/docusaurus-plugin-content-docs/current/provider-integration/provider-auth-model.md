@@ -13,12 +13,41 @@ AtlasClaw 负责识别用户。Provider 负责把该身份转换为目标系统�
 - 实例级凭证由管理员配置。
 - 用户级凭证由每个用户配置。
 - 请求级凭证可来自 Cookie 或上游 Header。
+- Robot Profile 凭证由管理员拥有，并且只为经过授权的 webhook Skill 调度选择。
 
-实例级凭证适合共享服务账号或部署级集成 Token。用户级凭证适合每个操作都需要归属到真实上游用户的场景。请求级凭证适合 AtlasClaw 嵌入在已认证系统之后，由上游转发有效 Token 或 Cookie。
+实例级凭证适合共享服务账号或部署级集成 Token。用户级凭证适合每个操作都需要归属到真实上游用户的场景。请求级凭证适合 AtlasClaw 嵌入在已认证系统之后，由上游转发有效 Token 或 Cookie。Robot Profile 凭证适合由外部 webhook 触发的 backend 自动化，并且上游审计需要记录为 Provider 原生 Robot 或服务账号的场景。
 
 ## 运行时规则 {#runtime-rule}
 
 调用外部 API 的 Provider 技能必须使用 Provider 原生凭证。Workspace 管理员身份不能绕过目标系统自己的权限控制。
+
+## Webhook Robot Profile {#webhook-robot-profiles}
+
+Robot Profile 配置在 Provider 实例下，由 webhook payload 字段选择，不会改变 Provider 实例的正常交互认证模式。
+
+```json
+{
+  "service_providers": {
+    "example_provider": {
+      "default": {
+        "base_url": "${PROVIDER_URL}",
+        "auth_type": "user_token",
+        "robot_auth": {
+          "backend_bot": {
+            "auth_type": "provider_token",
+            "provider_token": "${PROVIDER_ROBOT_TOKEN}",
+            "allowed_skills": ["example_provider:backend-agent"]
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+运行时，AtlasClaw 为选定实例和 Robot Profile 构造限定范围的 Provider 配置。显式 Provider callable 通过请求级 `RunContext` 接收选定实例和凭证；只有未限定 callable 的旧脚本 entrypoint 才会启动子进程并接收兼容环境变量。Robot 凭证不能复制到 Prompt、Trace 文本、用户设置或 webhook payload。
+
+完整配置方式见 [Webhook Robot 执行](/provider-integration/webhook-robot-execution)。
 
 ## IM 渠道请求 {#im-channel-requests}
 
@@ -34,7 +63,9 @@ IM 工具和渠道可以识别 AtlasClaw 用户和会话，但不会提供用户
 
 ## 认证链 {#auth-chains}
 
-部分 Provider 支持有序 `auth_type` 链。Provider 会根据可用字段和请求上下文选择第一个可用模式。
+部分 Provider 支持在 AtlasClaw 源配置中使用有序 `auth_type` 链。Core 根据 Provider schema、可用字段和请求上下文选择第一个可用模式，移除未选中模式的凭证，然后只向 Provider 执行层传入一个已经选定的 `auth_type`。
+
+认证链应保持明确。Provider 可以使用多个凭证来源时，应记录选择顺序和每个模式的必填字段。
 
 `auth_type` 可以是字符串，也可以是有序列表：
 
@@ -52,7 +83,7 @@ IM 工具和渠道可以识别 AtlasClaw 用户和会话，但不会提供用户
 }
 ```
 
-实际选择的认证模式始终来自 Provider 实例模板。用户不能在 Account Settings 中把 Provider 切换到另一种认证模式。
+认证链始终由 Provider 实例模板控制，因此用户不能在 Account Settings 中替换认证链或调整其顺序。Core 会为每个请求选择一个可用模式，并传入经过清理的执行配置；Provider Tool 代码应直接使用该模式，不应重新计算原始认证链。
 
 ## 支持的 Auth Type {#supported-auth-types}
 

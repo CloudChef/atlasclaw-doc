@@ -35,10 +35,10 @@ This boundary keeps the integration narrow:
 
 - the enterprise system adds an independent menu entry, a floating UI, or both;
 - the floating bridge publishes only normalized `path` and `generation`;
-- AtlasClaw owns Chat, Context snapshots, orchestration, confirmation, and
-  execution safety;
+- AtlasClaw owns Chat, Context snapshots, orchestration, confirmation,
+  execution safety, and the generic `object_actions` schema and builders;
 - the HostApp Provider owns page meaning, object resolution, Domain Skills,
-  and the shared `object_actions` contract;
+  and the business availability, copy, URLs, and inputs for each action;
 - the enterprise system continues to own its existing data, APIs, permissions,
   workflows, and audit.
 

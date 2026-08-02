@@ -44,9 +44,11 @@ Provider to match the page, resolve an object through existing APIs, and load
 the owning Domain Skill's state-aware actions.
 
 The HostApp Provider returns the same generic `object_actions` contract used by
-normal Chat Tool results. It does not maintain a separate floating-UI action
-catalog. This keeps page assistance and ordinary Agent conversations aligned
-as Domain Skills evolve.
+normal Chat Tool results. Core owns that contract's schema, normalization,
+safe builders, extraction, and delivery to the UI. The Provider supplies only
+business-specific availability, labels, prompts, inputs, and URLs. It does not
+maintain a separate floating-UI action catalog. This keeps page assistance and
+ordinary Agent conversations aligned as Domain Skills evolve.
 
 ## Enterprise System Capabilities {#host-app-capabilities}
 
@@ -88,11 +90,12 @@ contents, selected text, business DTOs, Provider identifiers, or AtlasClaw
 Session identifiers. Enterprise-system code must not call Embed REST, Agent
 Run, or Tool APIs on behalf of the iframe.
 
-AtlasClaw owns bootstrap, Context snapshots, Chat submission, action rendering,
-confirmation, Tool execution, and permission checks. The HostApp Provider owns
-path semantics, object reads, Domain Skills, and state-aware actions. This
-keeps the embedding integration generic even as the Provider's routes and
-workflows grow.
+AtlasClaw owns bootstrap, Context snapshots, Chat submission, the generic
+Object Action contract and builders, action rendering, confirmation, Tool
+execution, and permission checks. The HostApp Provider owns path semantics,
+object reads, Domain Skills, and the business rules and copy that determine
+which actions are currently available. This keeps the embedding integration
+generic even as the Provider's routes and workflows grow.
 
 ## Menu Flow {#menu-flow}
 
@@ -118,8 +121,13 @@ workflows grow.
    instance, matched existing Skill, and a bounded lifetime.
 6. The floating UI renders the object and actions. A prompt action enters the
    ordinary Chat path with the immutable Context reference.
-7. Before Provider Tool I/O, Core revalidates the latest page generation,
-   Provider binding, Tool ownership, and current permissions.
+7. When that Chat turn is submitted, Core verifies the Context owner,
+   generation, latest-page marker, lifetime, and Session scope before copying
+   the object and default Skill into the turn.
+8. Core separately resolves current authorization for the ordinary Chat Tool
+   inventory. The turn is not restricted to the page Skill's Tools, and Core
+   does not revalidate the page before every later Provider Tool I/O in the
+   same turn.
 
 An older asynchronous response cannot restore stale object details or actions
 after the enterprise system has reported a newer page.
@@ -185,7 +193,7 @@ Example route manifest:
   "schema_version": 1,
   "provider_type": "example_provider",
   "context_resolver": {
-    "entrypoint": "assistant_context/resolve.py"
+    "entrypoint": "assistant_context/resolve.py:resolve_context"
   },
   "routes": [
     {
@@ -209,16 +217,24 @@ Matching order uses explicit priority, template specificity, and manifest
 order. Query strings, fragments, Origins, page titles, selected text, and
 business DTOs are not match inputs.
 
+The entrypoint must explicitly name an async callable with the
+`file.py:callable` form. Core loads and validates it in process when the Embed
+Integration is initialized; Context resolution does not start a resolver
+subprocess.
+
 The HostApp Provider-level resolver returns:
 
 - a minimal object with the route-declared type and a non-empty ID;
 - approved display fields and bounded attributes;
-- `object_actions` derived from the current object state.
+- `object_actions` derived from the current object state with Core's generic
+  action builders.
 
 The matching `skill_ref` is declared by the route and cannot be replaced by
 resolver output. Object actions may open a safe enterprise-system URL or
 submit a Provider-authored prompt. They do not declare an exact Tool
-invocation.
+invocation. Core defines and validates the generic action shape; the Provider
+decides whether each business action is available and supplies its wording and
+arguments.
 
 ## SmartCMP Reference Implementation {#smartcmp-reference}
 
@@ -226,7 +242,8 @@ SmartCMP demonstrates the complete HostApp Provider pattern as an existing
 enterprise system with AtlasClaw embedded. SmartCMP keeps its APIs, Cookie
 session, RBAC, workflows, and audit. The SmartCMP Provider is installed with
 AtlasClaw and supplies the page-to-object mapping, unified object resolver,
-Domain Skills, and object action builders.
+Domain Skills, and SmartCMP-specific action availability and copy through
+Core's generic action builders.
 
 | SmartCMP page | Resolved object and Skill | State-aware actions |
 | --- | --- | --- |
@@ -253,8 +270,9 @@ downstream authorization.
   the HostApp Provider already supports.
 - Extend the HostApp Provider read adapter when a new object type requires
   another existing enterprise-system API.
-- Add state-aware actions to the owning Domain Skill, preferably through the
-  same action builder used by normal Chat Tool results.
+- Add state-aware business rules and copy to the owning Domain Skill, using
+  Core's generic action builders and the same Provider helper used by normal
+  Chat Tool results.
 - Do not add Provider page paths, field mappings, action labels, or business
   rules to AtlasClaw Core or the generic floating UI.
 

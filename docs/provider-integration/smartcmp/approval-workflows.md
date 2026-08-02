@@ -30,15 +30,16 @@ Approval tools use the same user-facing SmartCMP Request ID that appears in the
 pending approval list and SmartCMP UI, for example `RES20260505000010`,
 `TIC20260502000003`, or `CHG20260413000011`.
 
-The pending list exposes `APPROVAL_META.requestId` for each row. When a user
-says "approve 1", "同意 1", "reject #2", or another row-based selection, the
-agent must resolve that row to `APPROVAL_META.requestId` before calling
-`smartcmp_approve` or `smartcmp_reject`.
+The pending list returns each row with a visible `index`, normalized
+`request_id`, and Object Action metadata. When a user says "approve 1",
+"同意 1", "reject #2", or another row-based selection, the agent must resolve
+that row to its normalized `request_id` before calling `smartcmp_approve` or
+`smartcmp_reject`.
 
 Do not pass display row numbers, placeholder values, or UUID-shaped internal
-SmartCMP IDs to approval action tools. The approve and reject scripts resolve
-the user-facing Request ID to the provider's internal approval action ID before
-calling SmartCMP.
+SmartCMP IDs to approval action Tools. The approve and reject Provider
+operations resolve the user-facing Request ID to SmartCMP's internal approval
+action ID before submitting the decision.
 
 ## Governance {#governance}
 

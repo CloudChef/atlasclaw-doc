@@ -103,9 +103,11 @@ For a robot webhook dispatch, AtlasClaw:
 5. Confirms the robot profile allows the requested skill.
 6. Builds a runtime-only provider config containing the selected instance and
    selected robot credential.
-7. Starts the provider tool process with `ATLASCLAW_PROVIDER_CONFIG`,
-   `ATLASCLAW_PROVIDER_TYPE`, `ATLASCLAW_PROVIDER_INSTANCE`, and
-   `ATLASCLAW_ROBOT_PROFILE`.
+7. Invokes the registered Provider Tool. An explicit `file.py:callable`
+   entrypoint receives the scoped instance, credential, and robot identity in
+   its `RunContext`. Only a legacy entrypoint without `:callable` starts a
+   subprocess and receives the corresponding `ATLASCLAW_*` environment
+   variables.
 
 Robot credentials are not added to the prompt. Token, password, and cookie-like
 values are redacted from webhook arguments, traces, and API responses.

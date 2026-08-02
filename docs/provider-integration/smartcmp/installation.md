@@ -38,7 +38,10 @@ The provider package should include:
 | `PROVIDER.md` | Provider identity, capability context, and LLM-facing guidance. |
 | `provider.schema.json` | Config schema for provider instance and user credential fields. |
 | `README.md` | Provider source-of-truth setup and skill operation notes. |
-| `skills/` | SmartCMP skill modules and scripts. |
+| `pyproject.toml` | Installable `smartcmp-provider` distribution metadata. |
+| `src/smartcmp_provider/` | Shared authentication, models, transport, domain operations, and services. |
+| `assistant_context/` | Optional embedded-page route manifest and explicit Context resolver callable. |
+| `skills/` | Thin AtlasClaw Skill adapters and SmartCMP-specific Object Action presentation helpers. |
 | `assets/` | Optional provider icon and catalog assets. |
 
 ## Post-Install Checks {#post-install-checks}

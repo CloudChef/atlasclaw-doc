@@ -18,11 +18,22 @@ atlasclaw-providers/providers/SmartCMP-Provider/
 ├── README.md
 ├── PROVIDER.md
 ├── provider.schema.json
+├── pyproject.toml
+├── assistant_context/
+├── src/
+│   └── smartcmp_provider/
 └── skills/
 ```
 
 This documentation summarizes stable setup and user workflows. Implementation
 details remain in the provider repository.
+
+`src/smartcmp_provider/` is the reusable SmartCMP Provider implementation. It
+owns authentication resolution, typed models, API transport, domain operations,
+and shared services. `skills/` contains thin AtlasClaw adapters that translate
+`RunContext` and Tool results around those Provider operations. The standalone
+SmartCMP MCP adapter imports the same Provider package, but it is a separate
+entry scenario and is not involved when AtlasClaw loads SmartCMP Skills.
 
 When SmartCMP is configured as the HostApp Provider, AtlasClaw exposes
 independent menu and floating UIs that share the same SmartCMP Cookie

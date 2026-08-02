@@ -27,7 +27,7 @@ AtlasClaw Embedded 模式提供两支可以同时部署的独立 UI：完整菜�
 
 两支 UI 进入同一个 AtlasClaw Agent 运行时，但提供的信息不同。菜单访问打开不带页面 Context 的完整 Agent；悬浮 UI 额外发送当前 `path` 和 `generation`。AtlasClaw 随后使用配置的 HostApp Provider 匹配页面、通过现有 API 解析对象，并加载所属 Domain Skill 根据对象状态生成的操作。
 
-HostApp Provider 返回的通用 `object_actions` 合同也会被普通 Chat Tool 结果复用，不为悬浮 UI 维护第二套操作目录。这样页面助手与普通 Agent 对话会随 Domain Skills 的演进保持一致。
+HostApp Provider 返回的通用 `object_actions` 合同也会被普通 Chat Tool 结果复用。Core 负责该合同的 schema、规范化、安全 builder、提取以及向 UI 传递；Provider 只提供业务操作是否可用、标签、Prompt、输入项和 URL。Provider 不为悬浮 UI 维护第二套操作目录，因此页面助手与普通 Agent 对话会随 Domain Skills 的演进保持一致。
 
 ## 企业系统能力要求 {#host-app-capabilities}
 
@@ -60,7 +60,7 @@ HostApp Provider 返回的通用 `object_actions` 合同也会被普通 Chat Too
 
 `PAGE_CHANGED` 只发送共享协议字段、nonce、generation 和标准化绝对路径。不要包含 query、fragment、页面内容、选中文本、业务 DTO、Provider 标识或 AtlasClaw Session 标识。企业系统代码不应代替 iframe 调用 Embed REST、Agent Run 或 Tool API。
 
-AtlasClaw 负责 bootstrap、Context Snapshot、Chat 提交、操作展示、确认、Tool 执行和权限校验。HostApp Provider 负责页面路径语义、对象读取、Domain Skills 和状态相关操作。这样即使 Provider 路由和工作流持续增加，内嵌集成仍然保持通用。
+AtlasClaw 负责 bootstrap、Context Snapshot、Chat 提交、通用 Object Action 合同与 builder、操作展示、确认、Tool 执行和权限校验。HostApp Provider 负责页面路径语义、对象读取、Domain Skills，以及决定操作当前是否可用的业务规则和文案。这样即使 Provider 路由和工作流持续增加，内嵌集成仍然保持通用。
 
 ## 菜单 UI 流程 {#menu-flow}
 
@@ -77,7 +77,8 @@ AtlasClaw 负责 bootstrap、Context Snapshot、Chat 提交、操作展示、确
 4. Provider Resolver 使用请求级用户凭证读取当前对象，并返回受限的对象投影和当前 `object_actions`。
 5. Core 将 Snapshot 绑定到用户、悬浮界面、generation、Provider 实例、匹配到的现有 Skill 和有限生命周期。
 6. 悬浮 UI 展示对象和操作。Prompt 操作携带不可变 Context 引用进入普通 Chat 路径。
-7. Provider Tool 执行 I/O 前，Core 会重新校验最新页面 generation、Provider 绑定、Tool 归属和当前权限。
+7. 提交该 Chat turn 时，Core 会校验 Context 所有者、generation、最新页面标记、有效期和 Session scope，然后把对象和默认 Skill 复制到本次 turn。
+8. Core 会另外根据当前授权生成普通 Chat Tool 集合。该 turn 不会被限制为页面 Skill 的 Tool，也不会在同一 turn 的每次 Provider Tool I/O 前再次校验页面。
 
 企业系统报告新页面后，较早的异步响应无法恢复已经过期的对象信息或操作。
 
@@ -131,7 +132,7 @@ providers/example-provider/
   "schema_version": 1,
   "provider_type": "example_provider",
   "context_resolver": {
-    "entrypoint": "assistant_context/resolve.py"
+    "entrypoint": "assistant_context/resolve.py:resolve_context"
   },
   "routes": [
     {
@@ -152,17 +153,19 @@ providers/example-provider/
 
 模板支持静态路径段和单路径段占位符。匹配顺序依次考虑显式 priority、模板具体程度和清单顺序。Query、fragment、Origin、页面标题、选中文本和业务 DTO 都不是匹配输入。
 
+Entrypoint 必须使用 `file.py:callable` 形式显式指定 async callable。Core 在初始化 Embed Integration 时在进程内加载并校验它；Context 解析不会启动 Resolver 子进程。
+
 HostApp Provider 级 Resolver 返回：
 
 - 类型与路由声明一致、ID 非空的最小对象；
 - 经过批准的展示字段和大小受限的 attributes；
-- 根据当前对象状态生成的 `object_actions`。
+- 使用 Core 通用 action builder、根据当前对象状态生成的 `object_actions`。
 
-匹配的 `skill_ref` 由路由声明，Resolver 输出不能替换它。对象操作可以打开安全的企业系统 URL，或提交 Provider 编写的 Prompt，但不能声明一次精确 Tool 调用。
+匹配的 `skill_ref` 由路由声明，Resolver 输出不能替换它。对象操作可以打开安全的企业系统 URL，或提交 Provider 编写的 Prompt，但不能声明一次精确 Tool 调用。Core 定义并校验通用 action 结构；Provider 决定每项业务操作是否可用，并提供相应文案与参数。
 
 ## SmartCMP 参考实现 {#smartcmp-reference}
 
-SmartCMP 作为内嵌 AtlasClaw 的现有企业系统，展示了完整的 HostApp Provider 模式。SmartCMP 保留现有 API、Cookie 会话、RBAC、业务流程与审计；SmartCMP Provider 随 AtlasClaw 安装，提供页面到对象的匹配、统一对象 Resolver、Domain Skills 和对象操作构建器。
+SmartCMP 作为内嵌 AtlasClaw 的现有企业系统，展示了完整的 HostApp Provider 模式。SmartCMP 保留现有 API、Cookie 会话、RBAC、业务流程与审计；SmartCMP Provider 随 AtlasClaw 安装，提供页面到对象的匹配、统一对象 Resolver、Domain Skills，并通过 Core 通用 action builder 提供 SmartCMP 特有的操作可用性和文案。
 
 | SmartCMP 页面 | 解析对象与 Skill | 状态相关操作 |
 | --- | --- | --- |

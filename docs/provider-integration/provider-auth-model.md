@@ -58,8 +58,10 @@ interactive auth mode.
 ```
 
 At runtime, AtlasClaw builds a scoped provider config for the selected instance
-and selected robot profile. The provider script receives that config through
-the tool process environment. Robot credentials must not be copied into prompts,
+and selected robot profile. An explicit Provider callable receives the selected
+instance and credential through its request-scoped `RunContext`; only an
+unqualified legacy script entrypoint receives the compatibility environment
+variables in a subprocess. Robot credentials must not be copied into prompts,
 trace text, user settings, or webhook payloads.
 
 For the full setup pattern, see
@@ -87,8 +89,10 @@ Provider Token. If the provider is intentionally configured with a shared
 
 ## Auth Chains {#auth-chains}
 
-Some providers support an ordered `auth_type` chain. The provider selects the
-first usable mode based on available fields and request context.
+Some providers support an ordered `auth_type` chain in AtlasClaw source
+configuration. Core selects the first usable mode based on the Provider schema,
+available fields, and request context. It removes credentials for inactive
+modes and passes one selected `auth_type` to the Provider execution layer.
 
 Auth chains should be explicit. If a provider can use several credential
 sources, document the selection order and the fields required by each mode.
@@ -109,8 +113,11 @@ sources, document the selection order and the fields required by each mode.
 }
 ```
 
-The selected auth mode always comes from the provider instance template. A user
-cannot switch the provider to another auth mode from Account Settings.
+The auth chain always comes from the provider instance template, so a user
+cannot replace or reorder it from Account Settings. Core selects one usable
+mode for each request and passes a sanitized execution config. Provider Tool
+code should consume that selected mode instead of re-evaluating the original
+chain.
 
 ## Supported Auth Types {#supported-auth-types}
 

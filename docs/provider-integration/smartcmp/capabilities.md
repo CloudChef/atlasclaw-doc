@@ -25,7 +25,9 @@ SmartCMP Provider exposes these major capability areas:
   posture.
 
 Provider skills are loaded from the SmartCMP provider package and qualified by
-provider namespace.
+provider namespace. Their callable adapters invoke typed operations from
+`smartcmp_provider`; they do not maintain a second SmartCMP API or
+authentication implementation.
 
 ## Skill Map {#skill-map}
 

@@ -16,7 +16,7 @@ SmartCMP Provider 提供以下能力：
 - 成本优化建议、直接资源费用分析、已有发现的执行和跟踪。
 - 资源生命周期、补丁、安全和配置合规分析。
 
-Provider 技能从 SmartCMP Provider 包加载，并带有 Provider 命名空间。
+Provider 技能从 SmartCMP Provider 包加载，并带有 Provider 命名空间。Skill callable Adapter 调用 `smartcmp_provider` 中的 typed operation，不维护第二套 SmartCMP API 或认证实现。
 
 ## Skill 地图 {#skill-map}
 

@@ -45,7 +45,7 @@ sidebar_position: 4
 
 ## Cookie 或 Credential 模式 {#cookie-or-credential-mode}
 
-Cookie 模式使用 SmartCMP 会话 Cookie。Credential 模式使用用户名密码登录，并可能缓存运行时 Cookie。
+Cookie 模式使用请求级或显式配置的 SmartCMP 会话 Cookie。Credential 模式在每次 Provider 调用时登录一次，得到的会话只在本次请求中使用；Provider 不维护 Cookie cache。
 
 需要清晰的用户责任边界时，优先使用 User Token 模式。
 

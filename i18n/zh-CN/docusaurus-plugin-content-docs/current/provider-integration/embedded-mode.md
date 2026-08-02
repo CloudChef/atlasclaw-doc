@@ -22,8 +22,8 @@ HostApp Provider 随 AtlasClaw 安装和配置，不是要求企业系统新部�
 
 - 企业系统增加独立菜单入口、悬浮 UI，或同时提供两者；
 - 悬浮消息桥只发送规范化 `path` 和 `generation`；
-- AtlasClaw 负责 Chat、Context Snapshot、Agent 编排、确认与执行安全；
-- HostApp Provider 负责解释页面、解析对象、提供 Domain Skills，并生成统一的 `object_actions`；
+- AtlasClaw 负责 Chat、Context Snapshot、Agent 编排、确认、执行安全，以及通用 `object_actions` schema 和 builder；
+- HostApp Provider 负责解释页面、解析对象、提供 Domain Skills，以及每项操作的业务可用性、文案、URL 和输入项；
 - 企业系统继续负责现有数据、API、权限、业务流程与审计。
 
 ## 认证分层 {#authentication-layers}

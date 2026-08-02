@@ -19,6 +19,8 @@ SmartCMP approval 技能用于管理待审批任务。它和已提交申请的�
 
 Approval 工具只用于待审批任务和同意/拒绝动作。不要用 approval 工具查询用户自己已提交申请的状态，也不要用它回答“我的申请是否已经审批通过”。这类问题应使用 request 技能的 `smartcmp_get_request_status` 工具，并传入提交后返回的 Request ID。
 
+待审批列表的每一行都包含可见 `index`、标准化 `request_id` 和 Object Action metadata。用户说“同意 1”或“拒绝第 2 个”时，Agent 必须先把行号解析为对应 `request_id`，再调用 `smartcmp_approve` 或 `smartcmp_reject`。不要把显示行号、占位值或内部 UUID 传给审批 Tool；Provider operation 会把用户可见 Request ID 解析为 SmartCMP 内部审批操作 ID。
+
 ## 治理 {#governance}
 
 审批操作必须使用在 SmartCMP 中具备审批权限的凭证。AtlasClaw workspace 角色不会在 SmartCMP 内部授予审批权。

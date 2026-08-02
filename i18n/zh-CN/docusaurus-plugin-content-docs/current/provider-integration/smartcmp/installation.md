@@ -35,7 +35,10 @@ atlasclaw-providers/providers/SmartCMP-Provider/
 | `PROVIDER.md` | Provider 身份、能力上下文和 LLM 指导。 |
 | `provider.schema.json` | Provider 实例和用户凭证字段 schema。 |
 | `README.md` | Provider 安装和 Skill 运行说明。 |
-| `skills/` | SmartCMP Skill 模块和脚本。 |
+| `pyproject.toml` | 可安装 `smartcmp-provider` distribution metadata。 |
+| `src/smartcmp_provider/` | 共享认证、模型、transport、领域 operation 和 service。 |
+| `assistant_context/` | 可选内嵌页面路由清单和显式 Context Resolver callable。 |
+| `skills/` | 薄 AtlasClaw Skill Adapter 和 SmartCMP 特有的 Object Action 展示 helper。 |
 | `assets/` | Provider 图标和 catalog 资源。 |
 
 ## 安装后检查 {#post-install-checks}
