@@ -57,7 +57,7 @@ const sidebars = {
         'provider-integration/smartcmp/resource-operations',
         'provider-integration/smartcmp/alarm-management',
         'provider-integration/smartcmp/cost-optimization',
-        'provider-integration/smartcmp/resource-compliance',
+        'provider-integration/smartcmp/security-compliance',
         'provider-integration/smartcmp/troubleshooting'
       ]
     }

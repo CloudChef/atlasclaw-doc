@@ -21,7 +21,7 @@ Discovery examples include:
 - list all cloud hosts;
 - filter hosts by keyword;
 - refresh and analyze a single host by resource ID;
-- fetch resource details for compliance or troubleshooting.
+- fetch resource details for Security analysis or troubleshooting.
 
 ## Comprehensive Resource Analysis {#comprehensive-resource-analysis}
 
@@ -33,13 +33,20 @@ analyzers:
 1. current alerts and currently resolved alerts whose trigger time is inside
    the configured lookback;
 2. runtime health from the resource component's Prometheus monitoring model;
-3. generic compliance risk from a bounded and redacted resource profile;
+3. resource-first Security posture from a bounded and redacted resource profile,
+   with associated CMP-confirmed Security violations kept separate from LLM
+   inference;
 4. platform-confirmed and LLM-inferred cost optimization opportunities.
 
 The final response separates evidence and gaps for each dimension, then
 highlights cross-dimensional relationships. Failure or missing evidence in one
 dimension does not suppress the other dimensions. Comprehensive analysis does
 not change the resource.
+
+Security violation coverage remains explicit. Every exact match is reported even
+when the inventory is partial. Only complete coverage with no matches supports a
+no-associated-violation conclusion; partial or failed coverage cannot establish
+absence.
 
 The action is generated from the current resource object. When the user
 navigates to another supported SmartCMP page, the floating assistant resolves

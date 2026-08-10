@@ -9,7 +9,8 @@ sidebar_position: 1
 SmartCMP Provider connects AtlasClaw to SmartCMP cloud management workflows.
 It supports resource requests, submitted request status lookup, approvals,
 directory queries, dynamic resource analysis and operations, alarm and resource
-health analysis, cost optimization, and resource compliance analysis.
+health analysis, cost optimization, resource-first Security analysis, and
+Security compliance violation workflows.
 
 The source of truth is the provider package:
 
@@ -39,8 +40,9 @@ When SmartCMP is configured as the HostApp Provider, AtlasClaw exposes
 independent menu and floating UIs that share the same SmartCMP Cookie
 authentication. The menu provides full Chat, while the floating UI dynamically
 follows supported SmartCMP pages. SmartCMP Provider route definitions bind the
-current page to an approval, request, alarm, cost recommendation, or resource
-object and expose actions appropriate to that object's current state. See
+current page to an approval, request, alarm, cost recommendation, Security
+violation collection, or resource object and expose actions appropriate to that
+object's current state. See
 [Embedded Menu and Floating UI](../embedded-menu-and-floating-ui.md).
 
 ## Audience {#audience}
@@ -58,10 +60,10 @@ object and expose actions appropriate to that object's current state. See
 | Approval | List pending approval tasks and approve or reject with a reason. |
 | Datasource | Discover services, business groups, templates, images, and resource facts. |
 | Resource pool | List and filter available SmartCMP resource pools. |
-| Resource | Browse resources, comprehensively analyze one resource, and perform permitted day-2 operations. |
+| Resource | Browse resources, analyze one resource's Security posture and associated CMP violations, coordinate comprehensive analysis, and perform permitted day-2 operations. |
 | Alarm and health | Analyze alerts or determine a resource's runtime health from its component monitoring evidence. |
 | Cost optimization | Review recommendations or directly analyze one resource, execute native fixes for existing findings, and track remediation. |
-| Resource compliance | Analyze resource lifecycle, patch, security, and configuration posture. |
+| Security compliance | View CMP-wide Security posture, analyze one violation, and explicitly mark only its status FIXED after manual remediation and confirmation. |
 
 SmartCMP permissions still come from SmartCMP. AtlasClaw role access only
 decides whether a user can invoke the provider skill from AtlasClaw.
