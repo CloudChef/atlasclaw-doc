@@ -31,21 +31,43 @@ SmartCMP resource 技能支持资源浏览、单资源综合分析和部分 day-
 
 ## 操作 {#operations}
 
-资源操作技能在解析目标资源 ID 后支持明确动作，例如 start 和 stop。
+资源操作技能支持 start、stop、卸除、删除资源元数据和永久卸除等明确动作。用户可以使用 `resource_id`、`resource_name`、`deployment_id` 或 `deployment_name` 定位目标。名称必须在当前用户可见范围内精确且唯一；找不到或匹配多个对象时，操作必须在写入前停止。
 
 操作是否成功取决于用户在 SmartCMP 中的权限和目标资源当前状态。
 
 成功操作的输出应保持简洁，只包含动作、目标资源 ID、submitted 标记、面向用户的消息和验证提示。不要打印原始 SmartCMP 请求 payload 或原始响应详情。如果 SmartCMP 在 HTTP 200 响应中返回业务失败，工具应输出简短错误，而不是报告提交成功。
 
+### 卸除生命周期 {#removal-lifecycle}
+
+SmartCMP 资源卸除是分阶段的生命周期，三个操作不能互相替代：
+
+| 阶段 | SmartCMP 操作 | 结果 |
+| --- | --- | --- |
+| 卸除 | `tear_down_in_resource` | 将 active 资源推进到 stopped 或已卸除状态，但不会永久删除 CMP 记录。 |
+| 删除资源元数据 | `delete_metadata_in_resource` | 删除 node 资源元数据；node 变为 `status=deleted`，其 deployment 进入 CMP 回收站。 |
+| 永久卸除 | `permanently_delete_deployment` | 永久卸除回收站中的 deployment。该操作按 deployment 生效，可能影响其中的全部资源。 |
+
+完整演进为 **active → stopped/已卸除 → node 元数据已删除且 deployment 进入回收站 → deployment 永久卸除**。Node 达到 `status=deleted` 只说明第二阶段已经完成，不能证明永久卸除成功。
+
+用户以资源定位时，Agent 必须先解析并保留该资源所属的回收站 deployment，再执行永久卸除；用户以 deployment 定位时，同样需要精确且唯一的匹配。不得选择第一个名称模糊匹配结果，也不得假设一个 deployment 只包含一个资源。
+
+自动精确定位目前最多扫描 2,000 个回收站 deployment，超过该范围会安全拒绝。无定位字段浏览时，`total`、`page`、`size` 描述 deployment 分页，`items` 是展开后的资源行，因此同一 deployment 可以产生多行。
+
 ## 操作安全 {#operation-safety}
 
-Start 和 stop 会改变上游资源状态。执行前必须展示目标资源名称、可用时的当前状态和目标动作。稳定的 SmartCMP 资源 ID 应在内部解析并保留，不要求用户提供，也不向用户展示。Agent 应询问明确确认，例如 `确认要执行吗？`，然后停止；只有用户确认后才调用操作。
+所有状态变更操作都需要显式确认。执行前必须展示精确目标、可用时的当前状态和目标动作。永久卸除前还必须展示解析得到的 deployment，提示该操作会影响同一 deployment 中的全部资源且不可恢复，然后停止；只有用户明确确认该影响范围后才可提交。
+
+写请求必须携带刚确认的 deployment ID 和完整资源 ID 集合。Provider 会在提交前重新解析并比较范围；如果 deployment 或资源集合发生变化，必须在写入前停止，重新展示范围并取得确认。
+
+永久卸除是异步操作。提交后必须按 deployment 验证完成状态：回收站 deployment 达到 `deleted=true`、`state=DELETED`，并且其回收态可执行操作列表为空。受 SmartCMP 保留期配置影响，已删除 deployment 仍可能暂时显示在回收站中；保留期后消失也属于有效完成结果。不得仅以 node 的 `status=deleted` 判断永久卸除成功。
 
 ## 常见阻塞 {#common-blockers}
 
 | 阻塞 | 含义 |
 | --- | --- |
 | Resource not found | ID 错误或当前凭证不可见。 |
+| Ambiguous name | 当前可见范围内有多个同名资源或 deployment；需要使用精确唯一名称或 ID。 |
 | Unsupported action | 资源类型不支持该 day-2 动作。 |
 | Permission denied | SmartCMP 接受凭证但拒绝操作。 |
 | Current state mismatch | 资源已停止、运行中或处于过渡状态。 |
+| Recycled action unavailable | Deployment 不在回收站、仍在处理其他操作、已永久删除，或当前用户没有权限。 |
