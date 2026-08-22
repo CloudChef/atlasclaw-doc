@@ -39,15 +39,15 @@ SmartCMP resource 技能支持资源浏览、单资源综合分析和部分 day-
 
 ### 卸除生命周期 {#removal-lifecycle}
 
-SmartCMP 资源卸除是分阶段的生命周期，三个操作不能互相替代：
+SmartCMP 回收站清理遵循以下生命周期，各阶段不能互相替代：
 
 | 阶段 | SmartCMP 操作 | 结果 |
 | --- | --- | --- |
 | 卸除 | `tear_down_in_resource` | 将 active 资源推进到 stopped 或已卸除状态，但不会永久删除 CMP 记录。 |
-| 删除资源元数据 | `delete_metadata_in_resource` | 删除 node 资源元数据；node 变为 `status=deleted`，其 deployment 进入 CMP 回收站。 |
+| 刷新影响范围 | 重新精确读取回收站 | 在永久卸除前立即解析目标 deployment 及其完整资源 ID 集合。 |
 | 永久卸除 | `permanently_delete_deployment` | 永久卸除回收站中的 deployment。该操作按 deployment 生效，可能影响其中的全部资源。 |
 
-完整演进为 **active → stopped/已卸除 → node 元数据已删除且 deployment 进入回收站 → deployment 永久卸除**。Node 达到 `status=deleted` 只说明第二阶段已经完成，不能证明永久卸除成功。
+回收站清理的完整演进为 **卸除 → 重新精确读取回收站中完整的 deployment 和资源范围 → 仅提交一次永久卸除**。`delete_metadata_in_resource` 是独立的、仅删除元数据的操作，绝不能在 `permanently_delete_deployment` 之前作为回收站清理的中间步骤。Node 达到 `status=deleted` 不能证明永久卸除成功。
 
 用户以资源定位时，Agent 必须先解析并保留该资源所属的回收站 deployment，再执行永久卸除；用户以 deployment 定位时，同样需要精确且唯一的匹配。不得选择第一个名称模糊匹配结果，也不得假设一个 deployment 只包含一个资源。
 
@@ -59,7 +59,7 @@ SmartCMP 资源卸除是分阶段的生命周期，三个操作不能互相替�
 
 写请求必须携带刚确认的 deployment ID 和完整资源 ID 集合。Provider 会在提交前重新解析并比较范围；如果 deployment 或资源集合发生变化，必须在写入前停止，重新展示范围并取得确认。
 
-永久卸除是异步操作。提交后必须按 deployment 验证完成状态：回收站 deployment 达到 `deleted=true`、`state=DELETED`，并且其回收态可执行操作列表为空。受 SmartCMP 保留期配置影响，已删除 deployment 仍可能暂时显示在回收站中；保留期后消失也属于有效完成结果。不得仅以 node 的 `status=deleted` 判断永久卸除成功。
+永久卸除是异步操作。Agent 仅提交一次 `permanently_delete_deployment`，之后只轮询验证，不得重复提交。永久卸除提交成功后，必须按 deployment 验证完成状态：deployment 已消失；或者回收站读取到的 tombstone 同时满足 `deleted=true`、`state=DELETED`、`recycle_delete_time` 为正数且没有可用操作。受 SmartCMP 保留期配置影响，tombstone 仍可能暂时显示在回收站中。不得仅以 node 的 `status=deleted` 判断永久卸除成功。
 
 ## 常见阻塞 {#common-blockers}
 

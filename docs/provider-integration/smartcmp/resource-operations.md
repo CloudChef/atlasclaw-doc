@@ -74,20 +74,21 @@ submission success.
 
 ### Removal Lifecycle {#removal-lifecycle}
 
-Removing a SmartCMP resource is a staged lifecycle. These stages are not
+Recycle-bin cleanup follows this lifecycle. These stages are not
 interchangeable:
 
 | Stage | SmartCMP operation | Result |
 | --- | --- | --- |
 | Tear down | `tear_down_in_resource` | Moves the active resource into its stopped or torn-down state. It does not permanently remove the CMP record. |
-| Delete resource metadata | `delete_metadata_in_resource` | Deletes the node resource metadata. The node reaches `status=deleted`, and its deployment enters the CMP recycle bin. |
+| Refresh scope | Fresh exact recycle-bin read | Resolves the target deployment and its complete resource-ID set immediately before permanent removal. |
 | Permanently remove | `permanently_delete_deployment` | Permanently removes the recycled deployment. This is a deployment-level action and can affect every resource that belongs to that deployment. |
 
-In other words, the expected progression is **active → stopped/torn down →
-node metadata deleted and deployment in the recycle bin → deployment
-permanently removed**. A node whose `status` is already `deleted` has completed
-only the metadata-deletion stage; that status is not evidence that permanent
-removal succeeded.
+In other words, the cleanup progression is **tear down → fresh exact
+recycle-bin read with complete deployment and resource scope → submit
+permanent removal exactly once**. `delete_metadata_in_resource` is a separate,
+metadata-only operation. It must never be used as an intermediate cleanup step
+before `permanently_delete_deployment`. A node whose `status` is already
+`deleted` is not evidence that permanent removal succeeded.
 
 When the target is supplied as a resource, the agent resolves and retains its
 owning recycle-bin deployment before permanent removal. When the target is
@@ -111,13 +112,14 @@ the user explicitly confirms that scope. The write carries the confirmed
 deployment ID and complete resource-ID set; if the freshly resolved scope has
 changed, the Provider stops before submission and requires a new confirmation.
 
-Permanent removal is asynchronous. After submission, completion is verified
-against the deployment rather than the node: the recycle-bin deployment must
-reach `deleted=true` and `state=DELETED`, and its recycled operation list must
-be empty. A deployment may remain visible during SmartCMP's configured
-retention period; disappearance after that period is also a valid completed
-outcome. Node `status=deleted` alone must never be used as proof of permanent
-removal.
+Permanent removal is asynchronous. The agent submits
+`permanently_delete_deployment` exactly once and polls without resubmitting.
+After a successful purge submission, completion is verified against the
+deployment rather than the node: either the deployment disappears, or the
+recycle-bin read returns a tombstone with `deleted=true`, `state=DELETED`, a
+positive `recycle_delete_time`, and no available operations. A tombstone may
+remain visible during SmartCMP's configured retention period. Node
+`status=deleted` alone must never be used as proof of permanent removal.
 
 ## Common Blockers {#common-blockers}
 
