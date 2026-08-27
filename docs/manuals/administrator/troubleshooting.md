@@ -53,12 +53,31 @@ For long-connection channels, also check whether the external app is authorized
 for event delivery. For webhook mode, send a test message from the upstream IM
 platform and confirm AtlasClaw receives the callback.
 
+In HA mode, also verify that the Handler is using a long-connection mode, the
+request reached the user's sticky node, and that node matches the Channel's
+stored owner. Webhook-mode connections are not supported in HA. AtlasClaw does
+not automatically transfer Channel ownership after a permanent node failure.
+
 ## Agent Gives Generic Answers {#agent-gives-generic-answers}
 
 Generic answers usually mean the runtime did not expose the intended tool or
 provider skill. Check selected model, skill permission, provider access, and the
 agent's allowed skill/provider settings. If the model is working but no tool is
 available, the issue is usually an authorization or registry problem.
+
+The message "could not safely determine an execution path" is different from
+capability absence. It means planning failed before execution, and no external
+action was run. Rephrase the request and retry, then inspect
+`conversation_turn_planning_failed` logs if the failure repeats.
+
+## Provider Workflow Loses Its Selection or Confirmation {#provider-workflow-loses-context}
+
+Check for `workflow_context_metadata_budget_exceeded`. A
+`single_entry_oversized` or `aggregate_limit` reason means a Provider Tool
+returned more hidden `_internal` continuation metadata than Core could retain.
+Keep public rows outside `_internal`, reduce the hidden payload to the exact
+next-step IDs and validation evidence, and confirm that the continuation uses
+the same request trace and Provider instance.
 
 ## User Token Looks Saved but Requests Fail {#user-token-looks-saved-but-requests-fail}
 

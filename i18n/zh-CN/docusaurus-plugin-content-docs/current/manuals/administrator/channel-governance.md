@@ -30,6 +30,12 @@ Channel 连接是个人运行时绑定。记录中包含名称、类型、启用
 
 该模型适用于代表个人或由某个用户连接的团队机器人。如果部署需要集中管理 Channel 连接，应记录运维 owner，并避免共享个人密钥。
 
+## HA 所有权策略 {#ha-ownership-policy}
+
+HA 部署还需要记录每个 Channel 所属的 AtlasClaw runtime node。新连接跟随认证用户的粘性节点；没有 owner 的历史记录会在该用户首次请求 Channel API 时被认领。只有 owner node 会恢复并运行已启用的长连接。
+
+HA 不支持 Webhook 模式的 Channel 配置，节点永久故障后也不会自动转移所有权。因此生产 runbook 必须覆盖粘性会话、稳定 node ID、owner node 恢复，以及如何受控处理失去 owner 的 Channel。不要把不断请求其他节点当作 failover，API 会拒绝 owner 不匹配。
+
 ## 连接校验 {#validating-connections}
 
 `/channels` 工作流提供 schema 表单校验和已保存连接验证。校验会检查必填字段和明显 URL 问题，验证会通过后端 handler 检查已保存连接。
@@ -54,3 +60,4 @@ Channel 连接是个人运行时绑定。记录中包含名称、类型、启用
 - 哪些 AtlasClaw 角色拥有对应 Channel 类型的访问权；
 - 是否允许入站消息，还是仅用于外发；
 - 事件期间如何禁用该连接。
+- 启用 HA 时的稳定 owner node 和恢复流程。

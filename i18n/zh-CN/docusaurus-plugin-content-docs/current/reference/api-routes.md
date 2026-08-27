@@ -25,6 +25,10 @@ sidebar_position: 2
 - `/api/memory/search`
 - `/api/memory/write`
 
+`POST /api/agent/runs/{run_id}/abort` 会先校验认证用户拥有该 run，再请求协作式取消，并返回 run 的实际状态。如果 run 已经结束，响应会保留该终态，不会固定返回 `aborted`。
+
+Run stream 的终止 phase 包括 `end`、`aborted`、`error` 和 `timeout`。客户端应保留已收到的回复内容；abort 结果不确定时，使用 `/api/agent/runs/{run_id}` 对账最终状态。
+
 ## Embed API {#embed-apis}
 
 - `/api/embed/bootstrap`

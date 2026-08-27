@@ -29,7 +29,8 @@ Analyze action starts.
 1. Use `smartcmp_get_security_overview` for the CMP-wide Security policy,
    execution, compliance, severity, violation, and trend state.
 2. Use `smartcmp_list_security_violations` to browse Security violations. A list
-   row exposes only **Analyze**.
+   row exposes only **Analyze**. Each call reads one bounded page, with at most
+   50 rows; use `page` to continue.
 3. **Analyze** calls `smartcmp_analyze_security_violation` and freshly rereads
    the exact violation, its latest status, resource, and policy. It presents
    CMP-confirmed facts, evidence gaps, manual remediation guidance, and
@@ -40,6 +41,9 @@ Analyze action starts.
    updating and verifying its status.
 
 Analyze and Mark Fixed must never run in the same turn.
+
+An empty page is not evidence that the complete violation inventory is empty.
+Check the returned page and coverage metadata before making an absence claim.
 
 ## Effect and Safety {#effect-and-safety}
 

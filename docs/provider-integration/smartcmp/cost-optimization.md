@@ -30,6 +30,10 @@ Execution must use SmartCMP credentials authorized for the target environment.
 4. Execute the SmartCMP-native day-2 fix only after explicit user intent.
 5. Track the remediation state.
 
+Recommendation listing returns one bounded page with at most 50 rows. Its page
+index starts at `0`; use `query` and the other filters to narrow the collection,
+then advance `page` when more recommendations remain.
+
 ### Direct Resource Analysis
 
 1. Resolve one exact resource by visible name, recent list selection, or trusted

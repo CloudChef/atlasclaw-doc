@@ -43,6 +43,24 @@ edit it, and delete it only when at least one active role has an allowed
 `include_all=true` on the channel catalog is a governance view. It is available
 only to users who can manage role permissions or channel permissions.
 
+## HA Node Ownership {#ha-node-ownership}
+
+In HA mode, a Channel connection has a runtime owner node. New connections are
+assigned to the node serving the user's sticky session. Historical connections
+without an owner are assigned for that user on the first Channel API request;
+enabled connections are then started only on the assigned node.
+
+HA accepts only connection modes identified by the registered Handler as
+long-connection modes. Webhook modes are rejected in HA even if that Handler
+supports webhooks in standalone mode. AtlasClaw does not automatically move a
+Channel to another node after a permanent owner-node failure; operators must
+restore the node or follow a deployment-specific, manually controlled recovery
+procedure.
+
+Channel API calls fail closed when the current sticky node does not match the
+recorded owner. Keep the user's Channel management traffic and persistent
+connection lifecycle on the same node.
+
 ## Message Model {#message-model}
 
 Inbound messages normalize external events into common fields such as

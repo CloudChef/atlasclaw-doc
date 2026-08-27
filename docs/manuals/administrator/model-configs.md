@@ -21,8 +21,16 @@ Model configuration controls which LLM endpoints AtlasClaw can use at runtime.
 Store API keys securely. The API response masks stored keys. Rotate keys through
 the model configuration workflow instead of editing database records directly.
 
-When multiple model tokens are configured, AtlasClaw can load them into the
-runtime token pool and use priority and weight to choose active entries.
+At startup, AtlasClaw validates and merges model entries from `atlasclaw.json`,
+database Model Tokens, and active Model Configs before it decides whether the
+runtime token pool is empty. Unusable credential entries are excluded, while a
+provider that is explicitly configured to operate without an API key remains
+eligible. Database entries keep their established override priority when IDs
+overlap.
+
+When multiple usable entries are configured, AtlasClaw uses priority and weight
+to choose among them. A configured primary ID that is no longer usable falls
+back to the first usable entry with a startup warning.
 
 ## Recommended Rollout {#recommended-rollout}
 
@@ -44,6 +52,11 @@ runtime token pool and use priority and weight to choose active entries.
 | Max tokens | Caps the generated response length and cost exposure. |
 | Temperature | Controls output variability; use lower values for operational workflows. |
 | Priority/weight | Controls selection when more than one token/model entry is active. |
+
+DeepSeek uses the OpenAI-compatible client with explicit thinking-mode request
+normalization. When runtime model parameters enable or disable thinking,
+AtlasClaw sends the corresponding DeepSeek request body and reads
+`reasoning_content` when the endpoint returns it.
 
 ## Failure Modes {#failure-modes}
 

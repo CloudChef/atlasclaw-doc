@@ -33,6 +33,14 @@ Channel catalog 会按当前用户的有效角色权限过滤。只有至少一�
 
 Channel catalog 的 `include_all=true` 是治理视图，仅对可以管理角色权限或 Channel 权限的用户开放。
 
+## HA 节点所有权 {#ha-node-ownership}
+
+HA 模式中，每个 Channel 连接都有 runtime owner node。新连接分配给当前用户粘性会话所在节点；没有 owner 的历史连接会在该用户首次请求 Channel API 时完成分配，之后只在被分配节点启动已启用连接。
+
+HA 只接受注册 Handler 识别为 long-connection 的连接模式。即使同一 Handler 在单机模式支持 Webhook，Webhook 模式在 HA 中仍会被拒绝。Owner node 永久故障后，AtlasClaw 不会自动把 Channel 迁移到其他节点；运维人员必须恢复原节点，或按部署方受控的恢复流程处理。
+
+当前粘性节点和记录的 owner 不一致时，Channel API 会安全拒绝。用户的 Channel 管理流量和持久连接生命周期必须保持在同一节点。
+
 ## 消息模型 {#message-model}
 
 Inbound message 会归一化为 `message_id`、`sender_id`、`sender_name`、`chat_id`、`channel_type`、`content`、`content_type`、`thread_id`、metadata 和 timestamp 等字段。Outbound message 包含目标 chat、内容、线程信息和 metadata。

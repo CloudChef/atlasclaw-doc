@@ -26,8 +26,7 @@ Skill 负责 CMP 全局 Security 总览、安全违规集合和单个违规对�
 
 1. 使用 `smartcmp_get_security_overview` 查看 CMP 全局 Security 策略、执行、
    合规、严重等级、违规和趋势状态。
-2. 使用 `smartcmp_list_security_violations` 浏览安全违规。列表行只展示
-   **分析**。
+2. 使用 `smartcmp_list_security_violations` 浏览安全违规。每次调用只读取一个有界页面，每页最多 50 行；使用 `page` 继续。列表行只展示**分析**。
 3. **分析**调用 `smartcmp_analyze_security_violation`，重新读取精确违规及其
    最新状态、资源和策略；展示 CMP 已确认事实、证据缺口、人工整改建议和验证
    步骤后停止。
@@ -36,6 +35,8 @@ Skill 负责 CMP 全局 Security 总览、安全违规集合和单个违规对�
    前重新读取精确违规，并在更新后验证状态。
 
 “分析”和“标记已修复”绝不能在同一轮执行。
+
+当前页为空不能证明完整违规清单为空。作出不存在违规的结论前，必须检查返回的分页和覆盖 metadata。
 
 ## 影响与安全边界 {#effect-and-safety}
 

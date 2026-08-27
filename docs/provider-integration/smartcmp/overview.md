@@ -10,7 +10,9 @@ SmartCMP Provider connects AtlasClaw to SmartCMP cloud management workflows.
 It supports resource requests, submitted request status lookup, approvals,
 directory queries, dynamic resource analysis and operations, alarm and resource
 health analysis, cost optimization, resource-first Security analysis, and
-Security compliance violation workflows.
+Security compliance violation workflows. Context-bound editor assistants can
+also read selected SmartCMP definitions and generate complete replacement
+content for manual review and copy.
 
 The source of truth is the provider package:
 
@@ -41,8 +43,8 @@ independent menu and floating UIs that share the same SmartCMP Cookie
 authentication. The menu provides full Chat, while the floating UI dynamically
 follows supported SmartCMP pages. SmartCMP Provider route definitions bind the
 current page to an approval, request, alarm, cost recommendation, Security
-violation collection, or resource object and expose actions appropriate to that
-object's current state. See
+violation collection, resource object, work order, or supported editor object
+and expose actions appropriate to that object's current state. See
 [Embedded Menu and Floating UI](../embedded-menu-and-floating-ui.md).
 
 ## Audience {#audience}
@@ -64,6 +66,7 @@ object's current state. See
 | Alarm and health | Analyze alerts or determine a resource's runtime health from its component monitoring evidence. |
 | Cost optimization | Review recommendations or directly analyze one resource, execute native fixes for existing findings, and track remediation. |
 | Security compliance | View CMP-wide Security posture, analyze one violation, and explicitly mark only its status FIXED after manual remediation and confirmation. |
+| Editor assistance | Read supported form, script, optimization-policy, and blueprint-component definitions and generate complete replacement content for manual copy. |
 
 SmartCMP permissions still come from SmartCMP. AtlasClaw role access only
 decides whether a user can invoke the provider skill from AtlasClaw.

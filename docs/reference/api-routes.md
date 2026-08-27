@@ -25,6 +25,16 @@ sidebar_position: 2
 - `/api/memory/search`
 - `/api/memory/write`
 
+`POST /api/agent/runs/{run_id}/abort` first verifies that the authenticated
+user owns the run, requests cooperative cancellation, and returns the run's
+actual status. If the run was already terminal, the response preserves that
+status rather than always returning `aborted`.
+
+The run stream uses terminal phases including `end`, `aborted`, `error`, and
+`timeout`. Clients should preserve already received response content and
+reconcile the terminal phase with `/api/agent/runs/{run_id}` when an abort
+outcome is uncertain.
+
 ## Embed APIs {#embed-apis}
 
 - `/api/embed/bootstrap`

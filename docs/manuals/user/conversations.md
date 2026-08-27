@@ -23,6 +23,26 @@ Sessions are separated by user, channel, and thread. A browser chat session and
 an IM thread can therefore keep different history even if the same user sends
 similar messages from both places.
 
+## Stop an Active Run {#stop-an-active-run}
+
+While a response is running, use **Stop** to request cooperative cancellation.
+The current run ends in the stopped state once the backend confirms the abort.
+AtlasClaw keeps the input draft and any response content that was already
+generated; stopping does not silently replace a partial response with an empty
+message.
+
+If the run reached another terminal state before the abort was processed, the
+UI reconciles and displays that actual state instead of claiming it was
+stopped.
+
+## Complete Generated Content {#complete-generated-content}
+
+When you request complete JSON, source code, configuration, or documentation,
+AtlasClaw keeps the generated content instead of replacing the middle with an
+ellipsis or summary. Fenced code blocks include a copy control that copies the
+original complete block, including formatting that may not be visible in the
+rendered HTML.
+
 ## Asking for Provider Work {#asking-for-provider-work}
 
 When asking the agent to use an operational system, include enough context for

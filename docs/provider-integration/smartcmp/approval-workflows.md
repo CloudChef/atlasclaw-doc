@@ -14,7 +14,7 @@ submitted request status lookup.
 - List pending approvals.
 - Fetch request details.
 - Approve a request by SmartCMP Request ID, with an optional reason.
-- Reject a request by SmartCMP Request ID, with an optional reason.
+- Reject a request by SmartCMP Request ID, with a required non-empty reason.
 
 ## Boundary With Request Status {#boundary-with-request-status}
 
@@ -26,9 +26,9 @@ Request ID.
 
 ## Request ID Contract {#request-id-contract}
 
-Approval tools use the same user-facing SmartCMP Request ID that appears in the
-pending approval list and SmartCMP UI, for example `RES20260505000010`,
-`TIC20260502000003`, or `CHG20260413000011`.
+Approval tools use the same exact user-facing SmartCMP Request ID that appears
+in the pending approval list and SmartCMP UI. Its format is opaque and may be
+prefixed, numeric, or UUID-shaped.
 
 The pending list returns each row with a visible `index`, normalized
 `request_id`, and Object Action metadata. When a user says "approve 1",
@@ -36,10 +36,15 @@ The pending list returns each row with a visible `index`, normalized
 that row to its normalized `request_id` before calling `smartcmp_approve` or
 `smartcmp_reject`.
 
-Do not pass display row numbers, placeholder values, or UUID-shaped internal
-SmartCMP IDs to approval action Tools. The approve and reject Provider
-operations resolve the user-facing Request ID to SmartCMP's internal approval
+Do not pass display row numbers, placeholder values, or SmartCMP's separate
+internal object ID to approval action Tools. Preserve a supplied Request ID
+exactly, including case and punctuation. The approve and reject Provider
+operations resolve that user-facing value to SmartCMP's internal approval
 action ID before submitting the decision.
+
+The `ids` input accepts either one Request ID string or an array of Request ID
+strings. A single string is one opaque ID and is never split on whitespace or
+punctuation.
 
 ## Governance {#governance}
 
@@ -52,13 +57,24 @@ power inside SmartCMP.
 1. List pending approvals.
 2. Inspect the selected approval item.
 3. Review request purpose, resource sizing, target environment, and cost impact.
-4. Ask the user for an approval or rejection reason if it was not provided.
+4. Require a non-empty reason for rejection. An approval reason remains
+   optional unless local governance requires one.
 5. Execute approve or reject only after the user intent is explicit.
-6. Report the upstream result and the user-facing Request ID.
+6. Report the upstream result and the user-facing Request ID for every item.
 
 For batch approvals or rejections, resolve every selected row to a Request ID
 from the latest pending approval metadata. If that metadata is unavailable or
 stale, list pending approvals again before executing the action.
+
+Batch results are evaluated per item. Report every item as succeeded, failed,
+or unknown, preserve its Request ID, and never collapse a partial batch into a
+single success statement. If a rejection call lacks a reason, the Provider
+returns an input-required result bound to the same workflow and performs no
+SmartCMP write.
+
+On a work-order approval page, the Provider resolves the record across pending
+and completed views. Only an exact pending task exposes approval mutations;
+completed or inconsistent records remain available for read-only detail.
 
 ## When to Escalate {#when-to-escalate}
 

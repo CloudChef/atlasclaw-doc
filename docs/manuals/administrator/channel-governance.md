@@ -44,6 +44,20 @@ Use this model for IM bots that represent a user or a team-owned bot connected
 by a specific user. If a deployment needs centrally managed channel
 connections, document the operational owner and avoid sharing personal secrets.
 
+## HA Ownership Policy {#ha-ownership-policy}
+
+In an HA deployment, also record the AtlasClaw runtime node that owns each
+Channel. New connections follow the authenticated user's sticky node, and
+historical ownerless records are claimed on that user's first Channel API
+request. Only the owner node restores and runs an enabled long connection.
+
+HA does not support webhook-mode Channel configurations and does not
+automatically transfer ownership after permanent node failure. The production
+runbook must therefore cover sticky-session configuration, stable node IDs,
+owner-node recovery, and a manually controlled procedure for any stranded
+Channel. Do not treat repeated requests against another node as a
+failover mechanism; the API rejects an owner mismatch.
+
 ## Validating Connections {#validating-connections}
 
 The `/channels` workflow exposes both schema-driven form validation and saved
@@ -73,3 +87,4 @@ For production IM integrations, record:
 - which AtlasClaw roles have channel access for the relevant channel type;
 - whether inbound messages are allowed or the channel is outbound-only;
 - how to disable the connection during an incident.
+- the stable HA owner node and recovery procedure, when HA is enabled.

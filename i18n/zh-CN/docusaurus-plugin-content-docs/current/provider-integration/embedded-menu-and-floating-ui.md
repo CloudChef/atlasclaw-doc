@@ -80,7 +80,9 @@ AtlasClaw 负责 bootstrap、Context Snapshot、Chat 提交、通用 Object Acti
 7. 提交该 Chat turn 时，Core 会校验 Context 所有者、generation、最新页面标记、有效期和 Session scope，然后把对象和默认 Skill 复制到本次 turn。
 8. Core 会另外根据当前授权生成普通 Chat Tool 集合。该 turn 不会被限制为页面 Skill 的 Tool，也不会在同一 turn 的每次 Provider Tool I/O 前再次校验页面。
 
-企业系统报告新页面后，较早的异步响应无法恢复已经过期的对象信息或操作。
+对于“重启它”这样的纯操作文本，服务端已校验的页面对象会提供目标和所属 Skill，用户无需重复描述当前对象。该目标绑定不会绕过 Skill 的必填输入、状态校验、确认规则或 Provider 授权。用户明确指定另一个目标或工作流时，普通的已授权 Skill 路由仍可以离开页面 Skill。
+
+企业系统报告新页面后，较早的异步响应无法恢复已经过期的对象信息或操作。悬浮 UI 会对快速页面切换进行 debounce，在解析最新 generation 时展示 Context loading，并在存在更新 generation 时忽略旧结果。
 
 悬浮页面匹配在运行时动态发生，但过程是确定性的。AtlasClaw 不会把页面内容交给 LLM 猜测当前工作流，而是使用已配置 HostApp Provider 的路由清单匹配路径，再由该 Provider 解析对象。
 
@@ -172,6 +174,14 @@ SmartCMP 作为内嵌 AtlasClaw 的现有企业系统，展示了完整的 HostA
 | `/main/virtual-machines/{resource_id}/details` | `virtual_machine` → `smartcmp:resource` | 打开、综合分析、操作 |
 | `/main/alarm-activity-management/alarm-triggered/edit/{alert_id}` | `alarm_alert` → `smartcmp:alarm` | 分析，并根据告警状态提供静音、解决或重新打开 |
 | `/main/new-application/pendingApproval/{approval_type}/{approval_id}` | `approval_request` → `smartcmp:approval` | 分析、同意、拒绝，并保留确认和必填输入 |
+| `/main/work-order-process/ServiceRequest/myApproval/{generic_request_id}` | `approval_request` → `smartcmp:approval` | 待审批：分析、同意、拒绝；已完成或状态不一致：只读详情 |
+| `/main/work-order-request/{catalog_id}` | `catalog` → `smartcmp:request` | 根据精确 catalog Context 构造申请 |
+| `/main/work-order-process/ServiceRequest/myApplication/{generic_request_id}` | `request` → `smartcmp:request` | 打开并查看已提交工单 |
+| `/main/resource-management/policy/edit/{policy_id}` | Security policy → `smartcmp:security-compliance` | 只读策略 Context |
+| `/main/service-model/forms/edit/{form_id}` 或 `/main/service-model/forms/design/{form_id}` | `form_definition` → `smartcmp:form-designer` | 生成完整表单替换内容供人工复制 |
+| `/main/model-design/scripts/edit/{script_id}` | `script_definition` → `smartcmp:script-designer` | 生成完整脚本替换内容供人工复制 |
+| `/main/measurement-billing/cost-optimization/optimization-policy/edit/{policy_id}` | `optimization_policy` → `smartcmp:optimization-policy-designer` | 生成策略替换内容，但不启用或执行策略 |
+| `/main/model-design/blueprint-components/edit/{component_id}` | `blueprint_component` → `smartcmp:component-script-designer` | 生成一个精确替换脚本文件，但不部署组件 |
 
 ![SmartCMP VM 页面中的悬浮 Context 与资源操作](/img/embedded/context-vm-floating.png)
 
@@ -180,6 +190,8 @@ SmartCMP 作为内嵌 AtlasClaw 的现有企业系统，展示了完整的 HostA
 ![SmartCMP 告警页面中的分析与告警操作](/img/embedded/context-alert-analysis.png)
 
 在告警页面中，同一模式会解析当前告警，并提供与其状态一致的操作。变更类操作仍然进入普通 Agent run，经过确认、Provider 权限检查和 SmartCMP 下游授权。
+
+编辑器路由被明确限制为只读。它们读取精确的已保存对象，返回完整替换内容供用户审查和复制，但不会保存、发布、执行或部署变更。详见[编辑辅助](./smartcmp/editor-assistance.md)。
 
 ## 动态扩展规则 {#dynamic-extension-rules}
 

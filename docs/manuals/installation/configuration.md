@@ -154,6 +154,41 @@ sections you do not use; omitted sections fall back to schema defaults.
 | `memory` | User-scoped memory retrieval settings. | Enable or tune memory search result count. |
 | `security` | Tool and workspace access policy. | Restrict tools or workspace access for hardened deployments. |
 
+## High-Availability Runtime {#high-availability-runtime}
+
+AtlasClaw HA requires a shared MySQL database, a shared Workspace initialized
+before application nodes start, a stable unique node ID for every instance,
+and an upstream proxy that keeps one authenticated user's requests on one node.
+SQLite is not an HA database.
+
+Run migrations once from a deployment initializer before starting the HA
+application nodes:
+
+```bash
+alembic upgrade head
+```
+
+Set these process environment variables on every node:
+
+```bash
+ATLASCLAW_ENABLE_HA=true
+ATLASCLAW_HA_NODE_ID=<unique-node-id>
+ATLASCLAW_RUN_AGENT_HEARTBEAT=false
+```
+
+Use `ATLASCLAW_RUN_AGENT_HEARTBEAT=true` on only one node when singleton Agent
+Heartbeat work is enabled. This flag does not control Channel ownership.
+
+Each node needs a local working directory. Process-owned Token Health and
+Heartbeat state stays in that node's local `runtime/` directory rather than the
+shared Workspace.
+
+HA currently accepts only Channel configurations whose registered Handler uses
+long-connection mode. Webhook-mode Channels remain available in standalone
+deployments but are rejected in HA. Channel ownership follows the user's sticky
+node and is not automatically transferred after a permanent node failure. See
+[Channels](/core/channels) and [Channel Governance](/manuals/administrator/channel-governance).
+
 ## Provider Packages {#provider-packages}
 
 Core scans `providers_root/<provider>/` for `PROVIDER.md`,

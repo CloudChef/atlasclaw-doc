@@ -52,6 +52,7 @@ const sidebars = {
         'provider-integration/smartcmp/admin-configuration',
         'provider-integration/smartcmp/user-token-setup',
         'provider-integration/smartcmp/capabilities',
+        'provider-integration/smartcmp/editor-assistance',
         'provider-integration/smartcmp/request-workflows',
         'provider-integration/smartcmp/approval-workflows',
         'provider-integration/smartcmp/resource-operations',

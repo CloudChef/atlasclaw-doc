@@ -20,7 +20,9 @@ sidebar_position: 3
 
 安全保存 API Key。API 响应会脱敏显示密钥。轮换密钥时应通过模型配置流程完成，不要直接修改数据库记录。
 
-当配置多个模型 Token 时，AtlasClaw 可以把它们加载进运行时 Token 池，并使用优先级和权重选择可用条目。
+启动时，AtlasClaw 会先校验并合并 `atlasclaw.json`、数据库 Model Token 和 active Model Config，再判断运行时 Token 池是否为空。不可用的凭证条目会被排除；显式配置为无需 API Key 的 Provider 仍可保留。ID 重复时，数据库条目继续使用既有的覆盖优先级。
+
+存在多个可用条目时，AtlasClaw 使用优先级和权重进行选择。配置的 primary ID 已不可用时，启动日志会告警并回退到第一个可用条目。
 
 ## 推荐上线步骤 {#recommended-rollout}
 
@@ -40,3 +42,5 @@ sidebar_position: 3
 | Max tokens | 控制回复长度和成本暴露。 |
 | Temperature | 控制输出随机性；运维流程建议较低。 |
 | Priority/weight | 多个配置启用时影响选择策略。 |
+
+DeepSeek 使用 OpenAI-compatible client，并显式规范化 thinking mode 请求。运行时模型参数启用或禁用 thinking 时，AtlasClaw 会发送相应的 DeepSeek 请求体，并在端点返回时读取 `reasoning_content`。

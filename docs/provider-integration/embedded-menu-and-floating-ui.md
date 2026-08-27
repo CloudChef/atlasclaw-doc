@@ -129,8 +129,17 @@ generic even as the Provider's routes and workflows grow.
    does not revalidate the page before every later Provider Tool I/O in the
    same turn.
 
+For an action-only text command such as "restart it", the server-validated page
+object supplies the target and its owning Skill; the user does not need to
+repeat the current object. This target binding does not bypass the Skill's
+required inputs, state checks, confirmation rules, or Provider authorization.
+If the user explicitly names another target or workflow, ordinary authorized
+Skill routing may switch away from the page Skill.
+
 An older asynchronous response cannot restore stale object details or actions
-after the enterprise system has reported a newer page.
+after the enterprise system has reported a newer page. The floating UI
+debounces rapid page changes, shows Context loading while the latest generation
+is being resolved, and ignores an older result when a newer generation exists.
 
 Floating page matching is dynamic at runtime but deterministic. AtlasClaw does
 not send page contents to an LLM to guess the active workflow. It matches the
@@ -250,6 +259,14 @@ Core's generic action builders.
 | `/main/virtual-machines/{resource_id}/details` | `virtual_machine` → `smartcmp:resource` | Open, Analyze, Operations |
 | `/main/alarm-activity-management/alarm-triggered/edit/{alert_id}` | `alarm_alert` → `smartcmp:alarm` | Analyze plus Mute, Resolve, or Reopen according to alarm state |
 | `/main/new-application/pendingApproval/{approval_type}/{approval_id}` | `approval_request` → `smartcmp:approval` | Analyze, Approve, Reject with confirmation and required inputs |
+| `/main/work-order-process/ServiceRequest/myApproval/{generic_request_id}` | `approval_request` → `smartcmp:approval` | Pending: Analyze, Approve, Reject; completed or inconsistent: read-only detail |
+| `/main/work-order-request/{catalog_id}` | `catalog` → `smartcmp:request` | Build a request from the exact catalog Context |
+| `/main/work-order-process/ServiceRequest/myApplication/{generic_request_id}` | `request` → `smartcmp:request` | Open and inspect the submitted work order |
+| `/main/resource-management/policy/edit/{policy_id}` | Security policy → `smartcmp:security-compliance` | Read-only policy Context |
+| `/main/service-model/forms/edit/{form_id}` or `/main/service-model/forms/design/{form_id}` | `form_definition` → `smartcmp:form-designer` | Generate complete replacement form content for manual copy |
+| `/main/model-design/scripts/edit/{script_id}` | `script_definition` → `smartcmp:script-designer` | Generate complete replacement script content for manual copy |
+| `/main/measurement-billing/cost-optimization/optimization-policy/edit/{policy_id}` | `optimization_policy` → `smartcmp:optimization-policy-designer` | Generate replacement policy content without enabling or executing it |
+| `/main/model-design/blueprint-components/edit/{component_id}` | `blueprint_component` → `smartcmp:component-script-designer` | Generate one exact replacement script file without deploying it |
 
 ![SmartCMP VM page with floating Context and resource actions](/img/embedded/context-vm-floating.png)
 
@@ -263,6 +280,11 @@ On an alert page, the same pattern resolves the alert and offers actions valid
 for its current status. A mutation action enters the normal Agent run and still
 passes through confirmation, Provider permission checks, and SmartCMP's
 downstream authorization.
+
+Editor routes are deliberately read-only. They read the exact saved object and
+return complete replacement content for the user to review and copy; they do
+not save, publish, execute, or deploy changes. See [Editor
+Assistance](./smartcmp/editor-assistance.md).
 
 ## Dynamic Extension Rules {#dynamic-extension-rules}
 

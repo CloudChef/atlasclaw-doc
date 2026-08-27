@@ -48,6 +48,10 @@ evidence gap instead of reporting a healthy state.
 4. If the user asks for a status operation, confirm the target alert and action.
 5. Execute the operation and report the upstream result.
 
+General alert listing returns one bounded, one-based page with at most 50 rows.
+Advance `page` to continue browsing instead of treating the first page as the
+complete alert inventory.
+
 ## Status Operations {#status-operations}
 
 Typical actions include `mute`, `resolve`, and `reopen`. Use the exact action

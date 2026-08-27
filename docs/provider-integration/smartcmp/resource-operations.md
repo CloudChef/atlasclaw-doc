@@ -55,8 +55,10 @@ a turn that was already accepted continues through the ordinary Chat runtime.
 
 ## Operations {#operations}
 
-The resource operation skill supports explicit actions such as start, stop,
-tear down, metadata deletion, and permanent removal. A user may identify the
+The Agent's explicit generic resource-action set is `refresh`, `start`, `stop`,
+`restart`, `suspend`, and `tear_down_in_resource`. The action must also be
+enabled by SmartCMP for the exact target's current type, state, and user
+permission. A user may identify the
 target with `resource_id`, `resource_name`, `deployment_id`, or
 `deployment_name`. Names must resolve to exactly one visible SmartCMP object;
 the operation stops before making any change when a name is missing or
@@ -64,6 +66,13 @@ ambiguous.
 
 Operations depend on the user's SmartCMP permissions and the target resource's
 current state.
+
+Listing available actions does not execute one. After the target and available
+actions have been shown, a later exact command that names the resolved target
+and operation is explicit confirmation; the Agent does not ask for a redundant
+second confirmation. An action-only command from a validated current resource
+page inherits that page target but still follows the owning resource Skill's
+state and permission checks.
 
 Successful operation output is intentionally concise. It should include the
 action, target resource IDs, submitted flag, user-facing message, and
@@ -85,9 +94,9 @@ interchangeable:
 
 In other words, the cleanup progression is **tear down → fresh exact
 recycle-bin read with complete deployment and resource scope → submit
-permanent removal exactly once**. `delete_metadata_in_resource` is a separate,
-metadata-only operation. It must never be used as an intermediate cleanup step
-before `permanently_delete_deployment`. A node whose `status` is already
+permanent removal exactly once**. `delete_metadata_in_resource` is not an
+Agent-supported resource action and must never be used as a cleanup step or as
+a substitute for the dedicated recycle-bin workflow. A node whose `status` is already
 `deleted` is not evidence that permanent removal succeeded.
 
 When the target is supplied as a resource, the agent resolves and retains its
@@ -100,6 +109,7 @@ Automatic exact-locator resolution currently scans at most 2,000 recycled
 deployments and fails closed beyond that limit. For unfiltered recycle-bin
 browsing, `total`, `page`, and `size` describe the deployment page; `items`
 contains expanded resource rows, so one deployment can produce several items.
+The page size is at most 20 deployments.
 
 ## Operation Safety {#operation-safety}
 
@@ -108,7 +118,9 @@ agent must show the exact target, its current state when available, and the
 intended action. For permanent removal, it must also show the resolved
 deployment and warn that the operation affects all resources in that deployment
 and cannot be undone. The agent then stops and submits the operation only after
-the user explicitly confirms that scope. The write carries the confirmed
+the user explicitly confirms that scope. The fresh recycle-bin row must expose
+`permanently_delete_deployment`; otherwise the workflow stops without a write.
+The write carries the confirmed
 deployment ID and complete resource-ID set; if the freshly resolved scope has
 changed, the Provider stops before submission and requires a new confirmation.
 

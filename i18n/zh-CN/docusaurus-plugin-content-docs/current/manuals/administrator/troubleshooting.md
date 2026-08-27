@@ -28,6 +28,14 @@ sidebar_position: 7
 
 长连接模式还需要检查外部应用是否允许事件投递。Webhook 模式可从上游 IM 平台发送测试消息，确认 AtlasClaw 收到回调。
 
+HA 模式还要确认 Handler 使用 long-connection、请求到达用户的粘性节点，并且该节点与 Channel 保存的 owner 一致。HA 不支持 Webhook 模式，也不会在节点永久故障后自动转移 Channel 所有权。
+
 ## Agent 只给出泛泛回答 {#agent-gives-generic-answers}
 
 通常表示运行时没有暴露目标工具或 Provider Skill。检查模型、Skill 权限、Provider 访问权以及 Agent 的 allowed skill/provider 设置。
+
+“could not safely determine an execution path”与能力缺失不同，表示执行前的规划失败，没有运行任何外部操作。应重新表述请求后重试；重复出现时检查 `conversation_turn_planning_failed` 日志。
+
+## Provider 工作流丢失选择或确认 {#provider-workflow-loses-context}
+
+检查 `workflow_context_metadata_budget_exceeded`。`single_entry_oversized` 或 `aggregate_limit` 表示 Provider Tool 返回的隐藏 `_internal` 续跑 metadata 超出 Core 可保留的范围。公开列表应保留在 `_internal` 外，只在其中保存下一步所需的精确 ID 和验证证据，并确认续跑仍属于同一 request trace 和 Provider 实例。

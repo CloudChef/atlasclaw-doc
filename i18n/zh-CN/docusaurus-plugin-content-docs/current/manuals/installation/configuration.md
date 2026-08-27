@@ -148,6 +148,30 @@ AtlasClaw 从 `atlasclaw.json` 读取运行时配置，并展开 `${VAR_NAME}` �
 | `memory` | 用户级记忆检索设置。 | 开关记忆或调整结果数。 |
 | `security` | 工具 allow/deny 和 workspace 权限策略。 | 加固部署时限制工具或文件访问。 |
 
+## 高可用运行时 {#high-availability-runtime}
+
+AtlasClaw HA 需要共享 MySQL 数据库、应用节点启动前已经初始化的共享 Workspace、每个实例稳定且唯一的 node ID，以及保证同一认证用户请求始终进入同一节点的上游粘性路由。SQLite 不能作为 HA 数据库。
+
+启动 HA 应用节点前，由部署初始化任务只执行一次 migration：
+
+```bash
+alembic upgrade head
+```
+
+每个节点都设置以下进程环境变量：
+
+```bash
+ATLASCLAW_ENABLE_HA=true
+ATLASCLAW_HA_NODE_ID=<unique-node-id>
+ATLASCLAW_RUN_AGENT_HEARTBEAT=false
+```
+
+启用单例 Agent Heartbeat 工作时，只在一个节点设置 `ATLASCLAW_RUN_AGENT_HEARTBEAT=true`。该标记不控制 Channel 所有权。
+
+每个节点需要本地工作目录。进程自有的 Token Health 和 Heartbeat 状态保存在该节点本地 `runtime/` 目录，不写入共享 Workspace。
+
+HA 当前只接受注册 Handler 识别为 long-connection 的 Channel 配置。Webhook 模式在单机部署中仍然可用，但在 HA 中会被拒绝。Channel 所有权跟随用户粘性节点，节点永久故障后不会自动转移。详见[渠道](/core/channels)和[渠道治理](/manuals/administrator/channel-governance)。
+
 ## Provider 实例配置 {#provider-instance-configuration}
 
 `service_providers` 的结构是：

@@ -47,6 +47,12 @@ Provider 发现依赖可读取的 metadata。Provider 包应包含 `PROVIDER.md`
 
 新的 Python Provider Tool 应使用显式 `file.py:callable` entrypoint。同一个 Skill 的多个 Tool 可以指向同一 Adapter 模块中的不同 callable。页面 Context Resolver 也必须使用 `assistant_context/resolve.py:resolve_context` 这样的显式 async callable，不支持旧子进程形式。
 
+## Callable 结果契约 {#callable-result-contract}
+
+Callable 返回作为 Agent 证据的公开 Tool 结果，也可以包含有界 `_internal` 值，保存与请求 trace 绑定的续跑 metadata。Core 接受结构化或 JSON 序列化的 `_internal`，对用户隐藏该值，并且只在同一请求 trace 和所选 Provider 实例中恢复。
+
+Provider Adapter 应保持该 metadata 精简，只保留下一步必需的精确 ID、Provider identity、验证 token 或其他事实。不要把整页公开列表复制进 `_internal`；过大的 metadata 会从工作流上下文中省略，并产生结构化预算诊断。只读唯一候选续跑所用的 Markdown Tool 标记见[技能和工具](/core/skills-and-tools)。
+
 ## 配置 {#configuration}
 
 在 `atlasclaw.json` 中设置：

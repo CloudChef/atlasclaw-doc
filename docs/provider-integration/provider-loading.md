@@ -59,6 +59,21 @@ module. A page Context resolver must also use an explicit async callable such
 as `assistant_context/resolve.py:resolve_context`; the resolver contract does
 not support the legacy subprocess form.
 
+## Callable Result Contract {#callable-result-contract}
+
+A callable returns the public Tool result used as Agent evidence. It may also
+include a bounded `_internal` value for trace-bound continuation metadata. Core
+accepts a structured `_internal` value or a JSON-serialized one, hides it from
+the user-visible result, and restores it only for the same request trace and
+selected Provider instance.
+
+Provider adapters should keep this metadata small. Retain only exact IDs,
+Provider identity, validation tokens, or other facts required by the immediate
+next step. Do not copy an entire public page of rows into `_internal`; oversized
+metadata is omitted from workflow context and produces a structured budget
+diagnostic. See [Skills and Tools](/core/skills-and-tools) for the Markdown Tool
+flags that govern read-only single-candidate continuation.
+
 ## Configuration {#configuration}
 
 Set `providers_root` in `atlasclaw.json` to the directory containing provider
