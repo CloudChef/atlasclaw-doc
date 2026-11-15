@@ -88,3 +88,18 @@ Bootstrap 使用已配置的默认内嵌 Provider 分别校验独立的 `menu` �
 ## 使用说明 {#route-usage-notes}
 
 本页是高层路由地图，不替代 OpenAPI。请求和响应结构以运行服务的 OpenAPI schema 为准。管理 API 受权限控制，运行时 API 还会按角色和 Provider 实例访问过滤 Skill 与工具。
+
+## v1.0.1 新增 API
+
+| 路由 | 用途 |
+| --- | --- |
+| `POST /api/access-tokens` | 创建管理员拥有的令牌；明文仅返回一次。 |
+| `GET /api/access-tokens` | 列出自己的令牌元数据。 |
+| `DELETE /api/access-tokens/{token_id}` | 撤销自己的令牌。 |
+| `POST /api/chat/attachments` | 上传经过验证的聊天图片。 |
+| `GET /api/chat/attachments/{attachment_id}/content` | 读取有权访问的图片附件。 |
+| `DELETE /api/chat/attachments/{attachment_id}` | 删除符合条件的草稿附件。 |
+| `GET /api/sessions/{session_key}/input-capabilities` | 查询会话实际可用的输入能力。 |
+| `/api/providers/{provider_type}/{provider_instance}/{declared_path}` | 按声明的方法和访问策略分发 Provider HTTP 操作。 |
+
+访问令牌管理要求使用管理员会话，不接受 API 令牌认证。附件路由实施已认证用户和会话的所有权检查。Provider 运行时路由实施实例 RBAC 和清单中的访问策略。

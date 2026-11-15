@@ -79,3 +79,9 @@ Provider Adapter 应保持该 metadata 精简，只保留下一步必需的精�
 | Provider catalog 为空 | `providers_root` 错误或不可读。 |
 | Provider 出现但没有 Skill | `skills/` 结构或 `SKILL.md` 缺失。 |
 | 配置表单缺字段 | `provider.schema.json` 缺失或无效。 |
+
+## Provider HTTP 运行时
+
+自 v1.0.1 起，Provider 可以在 `provider.schema.json` 旁使用固定名称的 `runtime-api.json` 声明 HTTP 操作。每条路由定义方法、路径、处理函数、能力和访问策略。路由能力也必须在 Provider Schema 的 `runtime_capabilities` 中声明。
+
+Core 负责路由验证和分发，实施 RBAC、请求体大小限制以及安全的错误映射。认证细节、请求字段和业务逻辑由 Provider 包负责。HTTP 操作独立于 Agent 的 Skills 和 Tools。完整 Schema 请参阅 [Core 运行时清单契约](https://github.com/CloudChef/atlasclaw/blob/v1.0.1/docs/PROVIDER-GUIDE.MD#runtime-apijson-manifest)。

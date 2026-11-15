@@ -56,3 +56,7 @@ AtlasClaw 使用 workspace 角色控制管理权限。Provider 运行时操作�
 ## 访问问题排查 {#troubleshooting-access}
 
 用户能看到 Skill 但无法完成 Provider 请求时，检查四层：角色启用了该 Skill、角色能访问目标 Provider 实例、IM 请求使用的 Channel 类型对角色开放、用户已配置 Provider 需要的有效凭证。
+
+## 新注册的 Provider
+
+刷新内置角色时，系统会为标准 `user` 角色补充缺失的 Provider 实例权限，并保留已有的明确允许和拒绝设置。安装集成后应检查 Provider 权限；同步不会替代管理员维护的授权决策。

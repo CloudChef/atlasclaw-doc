@@ -210,3 +210,9 @@ SmartCMP 作为内嵌 AtlasClaw 的现有企业系统，展示了完整的 HostA
 - 不要把 Cookie、Token、凭证、query、fragment 或原始业务 payload 放入内嵌消息、路由清单、浏览器存储或 Context Snapshot。
 - 对象可见性由 Provider 使用当前用户的上游凭证进行校验。
 - Context Snapshot 只保存在进程内，重启后失效。部署必须使用单个 AtlasClaw 进程，或保证 bootstrap、Context 解析和页面范围 Agent turn 落在同一进程的粘性路由。
+
+## Context 生命周期与欢迎消息
+
+v1.0.1 中，嵌入式 Context 快照不再仅因时间流逝而过期。所有权、界面代次和容量检查仍然有效。快照仍保存在进程内，重启或容量淘汰可能导致快照丢失，因此它不是持久化的上下文存储。
+
+显示对象或其操作时，悬浮助手会隐藏欢迎消息；空会话回到没有对象上下文的页面时，欢迎消息会重新显示。

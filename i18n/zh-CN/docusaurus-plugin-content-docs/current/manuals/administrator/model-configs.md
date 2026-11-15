@@ -44,3 +44,9 @@ sidebar_position: 3
 | Priority/weight | 多个配置启用时影响选择策略。 |
 
 DeepSeek 使用 OpenAI-compatible client，并显式规范化 thinking mode 请求。运行时模型参数启用或禁用 thinking 时，AtlasClaw 会发送相应的 DeepSeek 请求体，并在端点返回时读取 `reasoning_content`。
+
+## 启用图片分析
+
+仅为支持图片输入的模型和端点启用 **图片分析**。在 Token 配置中声明 `"capabilities": {"vision": true}`；未声明时默认关闭。图片分析关闭时，包含图片的请求会在调用模型前被拒绝；故障转移候选模型也必须声明图片支持能力。
+
+启用后，请在同一会话中验证图片提问和后续追问。编辑其他模型设置时，已保存的 API Key 会保留。

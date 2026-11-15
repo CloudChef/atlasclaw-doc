@@ -8,6 +8,9 @@ sidebar_position: 4
 
 | 功能 | 主要角色 | UI 入口 | API 区域 | 源码区域 |
 | --- | --- | --- | --- | --- |
+| 图片分析 | 标准用户 | 聊天输入框 | `/api/chat/attachments` | `core/chat_attachments.py`, `api/routes_chat_attachments.py` |
+| 访问令牌 | 管理员 | 账户设置 | `/api/access-tokens` | `api/access_token_routes.py` |
+| Provider HTTP 运行时 | 按清单指定的用户或管理员 | API 客户端 | `/api/providers/{type}/{instance}/{path}` | `core/provider_http_runtime.py` |
 | 对话 | Standard User | `/` | `/api/agent`, `/api/sessions` | `app/atlasclaw/agent`, `api/routes_agent.py` |
 | 内嵌菜单 UI | Standard User | 内嵌 `surface=menu` | `/api/embed/bootstrap`、Chat API | `core/embed`, `scripts/embed` |
 | 上下文感知悬浮 UI | Standard User | 内嵌 `surface=floating` | `/api/embed/*`, `/api/agent/run` | `core/embed`, `scripts/embed` |

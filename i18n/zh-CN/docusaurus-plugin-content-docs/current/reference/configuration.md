@@ -199,3 +199,17 @@ Provider schema 会定义 `default_auth_type`、各 `auth_modes` 的必填字段
 ## Secret 管理 {#secret-handling}
 
 不要提交 API Key、Cookie、Provider Token、Channel Secret 或模型 Token。优先使用环境变量或部署支持的加密配置。轮换 Secret 时，应通过对应配置入口更新，不要直接修改运行时产物。
+
+## 回复语言
+
+`agent_defaults.response_language` 接受具体语言区域值（例如 `en-US`）、`null`，或省略该字段。不接受语言选择模式值。优先级依次为：会话中的明确语言要求、全局具体语言区域值、经验证的请求 `context.ui_locale`。
+
+```json
+{
+  "agent_defaults": {
+    "response_language": "en-US"
+  }
+}
+```
+
+部署时应包含共享资源 `app/atlasclaw/templates/prompts/response_language.json`。模板按进程缓存，修改后需要重启进程。
