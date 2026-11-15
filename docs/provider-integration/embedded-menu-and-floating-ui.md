@@ -316,3 +316,9 @@ shared embedded protocol or Core UI.
 - Context snapshots are process-local and do not survive restart. Use one
   AtlasClaw process or sticky routing that keeps bootstrap, Context resolution,
   and the page-scoped Agent turn on the same process.
+
+## Context Lifetime and Welcome State
+
+In v1.0.1, embedded context snapshots no longer expire solely because time has elapsed. Ownership, surface generation, and capacity checks still apply. Snapshots remain process-local and can be lost on restart or eviction; this is not durable context storage.
+
+The floating assistant hides its welcome message when an object or its actions are visible. An empty chat without object context shows the welcome message again.

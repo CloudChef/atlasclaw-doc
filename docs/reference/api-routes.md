@@ -105,3 +105,18 @@ This page is a high-level map, not an OpenAPI replacement. Use the running
 service's OpenAPI schema for request and response bodies. Management APIs are
 permission-gated, and runtime APIs may still filter skills or provider tools by
 role and provider instance access.
+
+## v1.0.1 API Additions
+
+| Route | Purpose |
+| --- | --- |
+| `POST /api/access-tokens` | Create an administrator-owned token; plaintext is returned once. |
+| `GET /api/access-tokens` | List owned token metadata. |
+| `DELETE /api/access-tokens/{token_id}` | Revoke an owned token. |
+| `POST /api/chat/attachments` | Upload validated chat images. |
+| `GET /api/chat/attachments/{attachment_id}/content` | Read an authorized image attachment. |
+| `DELETE /api/chat/attachments/{attachment_id}` | Delete an eligible draft attachment. |
+| `GET /api/sessions/{session_key}/input-capabilities` | Inspect the session's effective input capabilities. |
+| `/api/providers/{provider_type}/{provider_instance}/{declared_path}` | Dispatch a provider-declared HTTP operation using its declared method and access policy. |
+
+Access-token management requires an administrator session and rejects API-token authentication. Attachment routes enforce authenticated user/session ownership. Provider runtime routes enforce instance RBAC and the manifest access policy.

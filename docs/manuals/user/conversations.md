@@ -74,3 +74,13 @@ their own token or contact an administrator as appropriate.
 
 Avoid pasting secrets into chat. Use Provider Tokens or channel configuration
 forms for credentials.
+
+## Image Analysis
+
+Upload, paste, or drag static PNG, JPEG, or WebP images into the chat composer. Review the previews before sending. You can send an image alone or ask follow-up questions about images retained in the same conversation. Each upload supports up to four images, with a limit of 5 MiB and 20 million pixels per image.
+
+An administrator must enable image analysis for the effective model and endpoint. Support is not inferred from the model name. Attachments are private to the authenticated user and session; unavailable attachments are reported in history. Retained image context is bounded, so upload an image again if it is no longer available to the model.
+
+## Response Language
+
+Explicitly request a language, for example, "Reply in English." This takes precedence over the configured global response language and interface locale. Writing a question in another language alone does not request a language change. The shared policy also applies to model-backed recovery replies; static error messages are not translated by this policy.

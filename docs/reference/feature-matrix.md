@@ -8,6 +8,9 @@ sidebar_position: 4
 
 | Feature | Primary role | UI entry | API area | Source area |
 | --- | --- | --- | --- | --- |
+| Image analysis | Standard User | Chat composer | `/api/chat/attachments` | `core/chat_attachments.py`, `api/routes_chat_attachments.py` |
+| Access tokens | Administrator | Account Settings | `/api/access-tokens` | `api/access_token_routes.py` |
+| Provider HTTP runtime | User/Admin per manifest | API client | `/api/providers/{type}/{instance}/{path}` | `core/provider_http_runtime.py` |
 | Chat | Standard User | `/` | `/api/agent`, `/api/sessions` | `app/atlasclaw/agent`, `api/routes_agent.py` |
 | Embedded menu UI | Standard User | Embedded `surface=menu` | `/api/embed/bootstrap`, Chat APIs | `core/embed`, `scripts/embed` |
 | Context-aware floating UI | Standard User | Embedded `surface=floating` | `/api/embed/*`, `/api/agent/run` | `core/embed`, `scripts/embed` |

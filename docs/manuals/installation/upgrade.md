@@ -31,3 +31,21 @@ Back up:
 Upgrade provider packages separately. Recheck provider schemas and skill
 metadata after provider updates, especially for provider auth modes and
 capability changes.
+
+## Upgrading to v1.0.1
+
+The final `v1.0.1` tag points to `1838dec1f60edf5d5a9ca96f0262a6071730d57d`, including the Docker publishing fix.
+
+```bash
+docker pull registry.cn-shanghai.aliyuncs.com/atlasclaw/atlasclaw:v1.0.1
+```
+
+- Apply migration `011` for access tokens and `012` for chat attachments.
+- Refresh dependencies and rebuild native packages or container images for the Python 3.14.10 configuration.
+- Replace response-language mode values with a concrete locale, `null`, or omission. Include the shared response-language JSON prompt resource.
+- Explicitly enable `capabilities.vision` on compatible models before using image analysis.
+- Timestamp defaults in five migrations now use `CURRENT_TIMESTAMP`. Completed migrations do not rerun automatically, and tables left by failed migrations require inspection before retrying; they are not automatically removed.
+
+After upgrading, verify login, plain-text chat, image upload and follow-up, token creation and revocation, and embedded context navigation as applicable. The release build passed Docker push and pull verification; this does not establish live MySQL 8.0.16 upgrade validation.
+
+See the [complete v1.0.1 release notes](https://github.com/CloudChef/atlasclaw/releases/tag/v1.0.1).

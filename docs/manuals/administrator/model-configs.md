@@ -68,3 +68,9 @@ AtlasClaw sends the corresponding DeepSeek request body and reads
 
 When testing provider skills, keep model errors separate from provider errors.
 First confirm a plain conversation works, then test tool use.
+
+## Enable Image Analysis
+
+Enable **Image analysis** only for a model and endpoint that support image input. In token configuration, declare `"capabilities": {"vision": true}`. Missing declarations default to disabled. Image-bearing requests are rejected before model invocation when image analysis is disabled; failover candidates must also declare image support.
+
+Verify an image question and a follow-up in the same session after enabling the setting. Stored API keys are preserved when editing other model settings.

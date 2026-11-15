@@ -106,3 +106,9 @@ folders:
 
 Provider code should not require Core to know provider-specific defaults. Put
 those defaults in the provider manifest and schema.
+
+## Provider HTTP Runtime
+
+Since v1.0.1, a provider can declare HTTP operations in a fixed-name `runtime-api.json` beside `provider.schema.json`. Each route identifies its method, path, handler, capability, and access policy. Route capabilities must also be declared in `runtime_capabilities` in the provider schema.
+
+Core validates and dispatches these routes with RBAC, bounded request bodies, and safe error mapping. Provider packages own authentication details, request fields, and business logic. HTTP operations are independent of Agent Skills and Tools. See the [Core runtime manifest contract](https://github.com/CloudChef/atlasclaw/blob/v1.0.1/docs/PROVIDER-GUIDE.MD#runtime-apijson-manifest) for the complete schema.

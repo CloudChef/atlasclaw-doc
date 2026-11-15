@@ -38,3 +38,11 @@ system.
 - Do not share IM channel secrets through chat.
 - Report unexpected role or provider access to an administrator.
 - Log out from shared machines after using AtlasClaw.
+
+## Administrator Access Tokens
+
+Administrators can create, list, and revoke their AtlasClaw access tokens from Account Settings. Copy a newly created token immediately: its plaintext is displayed only once, and the server stores only a digest. These tokens authenticate API clients to AtlasClaw; they are separate from credentials for external providers.
+
+Send the token as `Authorization: Bearer <token>`. Requests use the owner's current permissions. Revocation, owner deactivation, and role changes affect subsequent requests immediately. Token-authenticated requests cannot create, list, or revoke access tokens.
+
+To rotate a token, create a replacement through an administrator session, update and verify the client, then revoke the old token. Never paste access tokens into chat.

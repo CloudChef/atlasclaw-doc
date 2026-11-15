@@ -286,3 +286,17 @@ Do not commit API keys, cookies, provider tokens, channel secrets, or model
 tokens. Prefer environment variables or encrypted config values when supported
 by your deployment. When rotating a secret, update the owning configuration
 surface instead of editing runtime artifacts directly.
+
+## Response Language
+
+`agent_defaults.response_language` accepts a concrete locale such as `en-US`, `null`, or omission. Language-selection modes are rejected. Precedence is: explicit conversation language request, global concrete locale, then validated request `context.ui_locale`.
+
+```json
+{
+  "agent_defaults": {
+    "response_language": "en-US"
+  }
+}
+```
+
+Deploy the shared `app/atlasclaw/templates/prompts/response_language.json` resource with the application. Restart processes after editing it because the template is cached per process.

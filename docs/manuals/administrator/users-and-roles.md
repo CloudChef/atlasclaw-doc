@@ -94,3 +94,7 @@ check these layers:
 3. The role has access to the IM channel type when the request comes from IM.
 4. The user has valid provider-native credentials when the provider requires
    per-user authentication.
+
+## Newly Registered Providers
+
+Built-in role refresh adds missing provider-instance permissions to the standard `user` role. Existing explicit allow and deny settings are preserved. Review provider permissions after installing an integration; synchronization does not replace administrator-managed authorization decisions.
